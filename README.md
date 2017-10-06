@@ -13,6 +13,7 @@ Learn Python 3 :
 + [Quickstart](https://learnxinyminutes.com/docs/python3/)
 + [Style Guide](https://www.python.org/dev/peps/pep-0008/)
 + [Official Documentation](https://docs.python.org/3/)
++ [If you want to suffer](https://learncodethehardway.org/more-python/)
 
 To test and use quickly without an IDE :
 
