@@ -23,7 +23,7 @@ Use Pycharm :
 
 + [To install it quickly on Ubuntu](https://itsfoss.com/install-pycharm-ubuntu/)
 
-## Required Features
+## Feature Goals
 
 ### Indexing :
 
@@ -45,3 +45,36 @@ Use Pycharm :
 ### Graphical User interface
 
 Simple graphical user interface with search bar(s), some checkboxes to activate some other options, and a text area where results can be displayed (list of articles with id, title, file name). When you click on it, displays
+
+## First iteration 06/10/2017 -> 08/10/2017
+
+- Alexis writes a basic implementation to get everyone started :
+
+	+ Parse pseudo-xml files into usable objects without library : make each document into a separate object, removing all the XML markup and considering all the rest as text
+	+ Simple tokenization of each of the documents using nltk (space-based rule with some exceptions manages by the library)
+	+ Basic fully in-memory inverted file, with scores computed as the product of the term-frequency and inverse-document-frequency, with posting-lists ordered by DOCID
+	+ For queries, input the query in terminal
+	+ Parallel scan all posting-lists to find each DOCID that has all search terms at least once
+	+ Consider all queries are only conjunctive and aggregate the scores as a simple sum of the score of each term for each document
+	+ Sort document list by term and output DOCIDs of the 5 first ones in terminal
+
+- All others learn Python through at least the QuickStart and the PEP8 (ideally with Learn Python the hard way if they can)
+
+## First code review 09/10/2017 from 10 to 12 a.m.
+
+Discussion around a nice cup of tea/chocolate/coffee.
+
+Alexis presents the basic structure of the project and the strategy for expanding the different elements (packages, classes, functions, ...).
+
+Affectation of the elements for the second iteration
+
+## Second iteration 09/10/2017 -> 15/10/2017
+
+> Important note : For each feature, think about paraterizing it so that it is possible to play with it in the GUI (for example, change the ponderation of words that are in the document title when computing the inverted file
+
++ Implementation of a simple GUI using [PyGObject](https://pygobject.readthedocs.io/en/latest/), [Kivy](https://kivy.org/) or [PySide](http://wiki.qt.io/PySide)
+	-> TODO By ...
+
++ Better parse the different XML elements of the file so that it is possible to ponderate the computation of the scores in the inverted file
+	-> TODO By ...
+
