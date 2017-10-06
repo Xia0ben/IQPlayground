@@ -70,7 +70,7 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
 
 ## Second iteration 09/10/2017 -> 15/10/2017
 
-> Important note : For each feature, think about paraterizing it so that it is possible to play with it in the GUI (for example, change the ponderation of words that are in the document title when computing the inverted file).
+> Important note : For each feature, think about parameterizing it so that it is possible to play with it in the GUI (for example, change the ponderation of words that are in the document title when computing the inverted file).
 
 + Simple GUI using [PyGObject](https://pygobject.readthedocs.io/en/latest/), [Kivy](https://kivy.org/) or [PySide](http://wiki.qt.io/PySide)
 	-> TODO By ...
@@ -78,7 +78,7 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
 + Better parse the different XML elements of the file so that it is possible to ponderate the computation of the scores in the inverted file depending on whether the terms are the title or if they must agree with a particular date, ...
 	-> TODO By ...
 
-+ Deactivable (through UI) stemming and stop words removal that is going to influence th creation of the IF
++ Deactivable (through UI) stemming and stop words removal that is going to influence th creation of the (IF YOU CHOOSE THAT, YOU'LL NEED TO ADD ANOTHER TASK)
 	-> TODO By ...
 
 + Merge-based creation of the inverted file (see slide 24 of teacher's slideshow)
@@ -112,6 +112,9 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
 + Random Indexing (see slide 32 of teacher's slideshow)
 	-> TODO By ...
 
++ Improvement of the GUI and integration of the OR clause instead of only AND
+	-> TODO By ...
+
 ## Third code review 19/10/2017 from 4:30 to 6:30 p.m.
 
 + Discussion around a nice cup of tea/chocolate/coffee.
@@ -120,7 +123,7 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
 
 + Bug fixes.
 
-## Preparation of the presentation 19/10/2017 from 4:30 to 6:30 p.m.
+## Preparation of the presentation 19/10/2017 from 6:30 to 8:30 p.m.
 
 + Overall bug fixes
 
