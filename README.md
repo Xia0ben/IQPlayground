@@ -73,7 +73,7 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
 > Important note : For each feature, think about parameterizing it so that it is possible to play with it in the GUI (for example, change the ponderation of words that are in the document title when computing the inverted file).
 
 + Simple GUI using [PyGObject](https://pygobject.readthedocs.io/en/latest/), [Kivy](https://kivy.org/) or [PySide](http://wiki.qt.io/PySide)
-	-> TODO By ...
+	-> SHOTGUN By Benoit :D
 
 + Better parse the different XML elements of the file so that it is possible to ponderate the computation of the scores in the inverted file depending on whether the terms are the title or if they must agree with a particular date, ...
 	-> TODO By ...
@@ -113,7 +113,7 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
 	-> TODO By ...
 
 + Improvement of the GUI and integration of the OR clause instead of only AND
-	-> TODO By ...
+	-> SHOTGUN By Benoit :D
 
 ## Third code review 19/10/2017 from 4:30 to 6:30 p.m.
 
