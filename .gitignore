@@ -105,3 +105,6 @@ ENV/
 
 # Idea files
 /.idea
+
+# Ignore pickle saves
+/pickles
