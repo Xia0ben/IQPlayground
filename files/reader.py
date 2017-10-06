@@ -12,7 +12,7 @@ Class used to read document files from the disk
 class Reader:
 
     @staticmethod
-    def read_file(file_path):
+    def read_file(file_path, ignore_case= True):
         '''
         Read a file and return it as an array of documents
         :param file_path: path to the read file
@@ -26,7 +26,7 @@ class Reader:
                 document_string = "{}\n{}".format(document_string, line)
 
                 if "</DOC>" in line:
-                    documents.append(Document(document_string))
+                    documents.append(Document(document_string, ignore_case))
                     document_string = ""
 
         return documents
