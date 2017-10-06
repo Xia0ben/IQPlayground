@@ -10,9 +10,11 @@ Use this template to create your algorithm files
 def example_algorithm(argument1, argument2):
     '''
     Document your algorithm here
-    :param argument1: Description de l'argument 1
-    :param argument2: Description de l'arguement 2
-    :return: Description du retour
+    Here we compare 2 arguments and return the first if both are the same
+    or return the second if they are different
+    :param argument1: Description of argument 1
+    :param argument2: Description of argument 2
+    :return: Description of return value
     '''
 
     if (argument1 == argument2):
