@@ -30,7 +30,7 @@ class Document:
         return set(self.__tokens)
 
     def doc_id(self):
-        return self.__tokens[1]
+        return self.__tokens[0]
 
     def term_frequecy(self, term):
         if term in self.__counter:

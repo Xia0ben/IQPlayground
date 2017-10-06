@@ -26,3 +26,22 @@ class Inverted_File:
 
             self.vocabulary_of_term[term] = {'size': len(posting_list),
                                              'posting_list': posting_list}
+
+    def scan(self, query= ""):
+        terms = query.split()
+        dict_term_docs = dict()
+        terms_gen = [term for term in self.vocabulary_of_term if term in terms]
+        for term in terms_gen:
+            dict_term_docs[term] = self.vocabulary_of_term[term]['posting_list'].keys()
+
+        if len(dict_term_docs) == 0:
+            return None
+
+        results = set(next(iter(dict_term_docs.values())))
+
+        for (term , documents) in dict_term_docs.items():
+            curr_set = set(documents)
+            results.intersection_update(curr_set)
+
+        return results
+
