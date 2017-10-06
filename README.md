@@ -56,7 +56,7 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
 	+ For queries, input the query in terminal
 	+ Parallel scan all posting-lists to find each DOCID that has all search terms at least once
 	+ Consider all queries are only conjunctive and aggregate the scores as a simple sum of the score of each term for each document
-	+ Sort document list by term and output DOCIDs of the 5 first ones in terminal
+	+ Sort document list by score and output DOCIDs of the 5 first ones in terminal
 
 - All others learn Python through at least the QuickStart and the PEP8 (ideally with Learn Python the hard way if they can)
 
@@ -70,7 +70,7 @@ Affectation of the elements for the second iteration
 
 ## Second iteration 09/10/2017 -> 15/10/2017
 
-> Important note : For each feature, think about paraterizing it so that it is possible to play with it in the GUI (for example, change the ponderation of words that are in the document title when computing the inverted file
+> Important note : For each feature, think about paraterizing it so that it is possible to play with it in the GUI (for example, change the ponderation of words that are in the document title when computing the inverted file).
 
 + Implementation of a simple GUI using [PyGObject](https://pygobject.readthedocs.io/en/latest/), [Kivy](https://kivy.org/) or [PySide](http://wiki.qt.io/PySide)
 	-> TODO By ...
