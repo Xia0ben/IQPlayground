@@ -35,7 +35,7 @@ class PostingList:
         self.ord_elems = self.ord_elems[:rank] + [(document_id, score)] + self.ord_elems[rank:(len(self.ord_elems))]
         self.rand_elems[document_id] = score
 
-    def ordonate_access(self):
+    def ordonated_access(self):
         '''
         allows to access each elements of the list ordonated by their score
         :return: a tuple (document_id, score)
@@ -43,7 +43,7 @@ class PostingList:
         for elem in self.ord_elems:
             yield elem
 
-    def document_score(self,document_id):
+    def document_score(self, document_id):
         '''
         return the score of a document in log time
         :param document_id: the document
