@@ -29,6 +29,7 @@ class NaiveAlgorithm(BaseAlgorithm):
 
         mapping_documents_scores = dict()
 
+        # for each document returned by the parrallel scan we keep its score
         for (doc_id, score) in inverted_file.parallel_scan(searched_terms):
             if doc_id not in mapping_documents_scores:
                 mapping_documents_scores[doc_id] = []
@@ -37,9 +38,9 @@ class NaiveAlgorithm(BaseAlgorithm):
         if len(mapping_documents_scores) == 0:
             return None
 
-        print(len(mapping_documents_scores))
         results = []
 
+        # for each document we push it and its score to a heapq
         for (doc_id, scores) in mapping_documents_scores.items():
             heapq.heappush(results, (np.sum(scores), doc_id))
 

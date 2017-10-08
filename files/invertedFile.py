@@ -95,4 +95,3 @@ class InvertedFile:
                     for other_term in [o_term for o_term in terms if o_term is not term]:
                         yield (item[0], self.vocabulary_of_term[term]['posting_list'].document_score(item[0]))
             turn = np.any(list(map(lambda w: ranks[w] < self.vocabulary_of_term[w]['size'], ranks.keys())))
-        print('done')
