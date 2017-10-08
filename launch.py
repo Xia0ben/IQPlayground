@@ -2,7 +2,7 @@ import os.path
 import pickle
 
 from files import InvertedFile, Reader
-from algorithm import  SimpleScanAlgorithm
+from algorithm import NaiveAlgorithm
 
 file_path = "latimes/la100590"
 pickle_path = "pickles/la100590"
@@ -23,7 +23,7 @@ else:
 
 print("Loaded Inverted File - {} terms found".format(len(inv_file.vocabulary_of_term)))
 
-algorithm = SimpleScanAlgorithm()
+algorithm = NaiveAlgorithm()
 
 while True:
     query = input("Query ? ")
