@@ -1,2 +1,2 @@
 from .baseAlgorithm import BaseAlgorithm
-from .simlpeScanAlgorithm import SimpleScanAlgorithm
+from .simpleScanAlgorithm import SimpleScanAlgorithm
