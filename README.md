@@ -78,19 +78,19 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
 	-> SHOTGUN By Benoit :D
 
 + Better parse the different XML elements of the file so that it is possible to ponderate the computation of the scores in the inverted file depending on whether the terms are the title or if they must agree with a particular date, ...
-	-> TODO By ...
+	-> TODO By Zakaria
 
 + Deactivable (through UI) stemming and stop words removal that is going to influence th creation of the (IF YOU CHOOSE THAT, YOU'LL NEED TO ADD ANOTHER TASK)
-	-> TODO By ...
+	-> TODO By Omar
 
 + Merge-based creation of the inverted file (see slide 24 of teacher's slideshow)
-	-> TODO By ...
+	-> TODO By Alexis
 
 + PL Compression (see slide 25 of teacher's slideshow)
-	-> TODO By ...
+	-> TODO By Omar
 
 + Variable Byte Encoding (see slides 26 to 29 of teacher's slideshow)
-	-> TODO By ...
+	-> TODO By Bachir
 
 ## Second code review 16/10/2017 from 8 to 10 a.m.
 
