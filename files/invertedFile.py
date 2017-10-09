@@ -34,7 +34,7 @@ class InvertedFile:
 
         for term in terms:
             frequency = 0
-            tf_list = dict()
+            tf_dict = dict()
 
             for document in documents:
                 # Calc of the term frequency in each document
@@ -42,7 +42,7 @@ class InvertedFile:
                 term_frequency = document.term_frequecy(term)
                 if term_frequency > 0:
                     frequency += 1
-                    tf_list[document.doc_id()] = term_frequency
+                    tf_dict[document.doc_id()] = term_frequency
 
             # Calc of the idf of the term
             # Slide 9 & 10
@@ -50,10 +50,10 @@ class InvertedFile:
 
             posting_list = PostingList()
 
-            for document_id in tf_list:
+            for document_id in tf_dict:
                 # Calc of the score for each document and add it to the posting list
                 # Slide 11
-                posting_list.add_document(document_id, tf_list[document_id] * idf)
+                posting_list.add_document(document_id, tf_dict[document_id] * idf)
 
             self.vocabulary_of_term[term] = {'size': len(posting_list),
                                              'posting_list': posting_list}
@@ -75,7 +75,7 @@ class InvertedFile:
         for term in [term for term in terms if term in self.vocabulary_of_term]:
             ranks[term] = 0
             # we create a list of generator witch yield their results
-            ordonated_accesses[term] = self.vocabulary_of_term[term]['posting_list'].ordonated_access()
+            ordonated_accesses[term] = self.vocabulary_of_term[term]['posting_list'].ordered_access()
 
         # while we have a term to explore we continue
         turn = len(ranks) > 0

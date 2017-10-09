@@ -20,7 +20,7 @@ class PostingList:
         add a document and its score to the posting list
         allows 2 access :
             random access : use a dict for log time access
-            ordonated access : use a list
+            ordered access : use a list
         :param document_id: the doc to add to the posting list
         :param score: the score of the doccument
         '''
@@ -35,9 +35,9 @@ class PostingList:
         self.ord_elems = self.ord_elems[:rank] + [(document_id, score)] + self.ord_elems[rank:(len(self.ord_elems))]
         self.rand_elems[document_id] = score
 
-    def ordonated_access(self):
+    def ordered_access(self):
         '''
-        allows to access each elements of the list ordonated by their score
+        allows to access each elements of the list ordered by their score
         :return: a tuple (document_id, score)
         '''
         for elem in self.ord_elems:

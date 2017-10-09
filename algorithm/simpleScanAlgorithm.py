@@ -33,7 +33,7 @@ class SimpleScanAlgorithm(BaseAlgorithm):
             mapping_term_documents[term] = list()
             if term in inverted_file.vocabulary_of_term:
                 # We access the VOC and add all documents found in the term's posting list to a set
-                for (doc_id, score) in inverted_file.vocabulary_of_term[term]['posting_list'].ordonated_access():
+                for (doc_id, score) in inverted_file.vocabulary_of_term[term]['posting_list'].ordered_access():
                     mapping_term_documents[term].append(tuple((doc_id, 1)))
 
         if len(mapping_term_documents) == 0:
