@@ -6,7 +6,7 @@ import os
 import numpy as np
 from sortedcontainers import SortedDict
 
-from files import PostingList
+from files import PostingList, FilePostingList
 
 '''
 InvertedFile class
@@ -20,7 +20,7 @@ Class used to represent an inverted file
 
 class InvertedFile:
 
-    def __init__(self, documents, memory_limit= 100):
+    def __init__(self, documents, memory_limit= 10):
         '''
         Init an inverted file by creating a voc and the associated pl
         slide 6
@@ -35,7 +35,36 @@ class InvertedFile:
 
         __nb_tmp_inverted_file = 0
 
-        tmp_inverted_file_base_path = "invertedfiles/tmp-{%H%M%S}-".format(self.__time_start)
+        tmp_inverted_file_base_path = "invertedfiles/tmp-{:%H%M%S}-".format(self.__time_start)
+
+        doc_count = 0
+        tmp_voc = SortedDict()
+        for document in documents:
+            for term in document.set_of_terms():
+                if term not in tmp_voc:
+                    tmp_voc[term] = [0, PostingList()]
+                tmp_voc[term][0] += 1
+                tmp_voc[term][1].add_document(document.doc_id(), document.term_frequecy(term))
+
+            doc_count += 1
+
+            if doc_count == memory_limit:
+                doc_count = 0
+                with open("{}{}".format(tmp_inverted_file_base_path,
+                                        __nb_tmp_inverted_file),"w") as tmp_file:
+                    for (term, [size, pl]) in tmp_voc.items():
+                        pl_str = ""
+                        for (doc_id, freq) in pl.alpha_access():
+                            pl_str = "{}({},{})".format(pl_str, doc_id, freq)
+                        tmp_file.write("{}:{}:{}\n".format(term, size, pl_str))
+                    tmp_voc = SortedDict()
+                __nb_tmp_inverted_file += 1
+
+        # parallel read
+        # combination
+        # final PL
+
+    def __old_init__(self, documents):
 
         self.vocabulary_of_term = SortedDict()
 

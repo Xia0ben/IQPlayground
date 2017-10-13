@@ -10,7 +10,7 @@ Class used to represent a posting list
 '''
 
 
-class PostingList:
+class FilePostingList:
 
     def __init__(self):
         self.ord_elems = list()
@@ -35,10 +35,6 @@ class PostingList:
 
         self.ord_elems = self.ord_elems[:rank] + [(document_id, score)] + self.ord_elems[rank:(len(self.ord_elems))]
         self.rand_elems[document_id] = score
-
-    def alpha_access(self):
-        for (key, val) in self.rand_elems.items():
-            yield (key, val)
 
     def ordered_access(self):
         '''
