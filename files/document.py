@@ -43,7 +43,7 @@ class Document:
         here we use the fact that the first token is always the docid in the documents of our corpus
         :return: the docid of the document
         '''
-        return self.__tokens[0]
+        return self.__tokens[1]
 
     def term_frequecy(self, term):
         '''

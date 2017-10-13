@@ -1,7 +1,10 @@
+from datetime import datetime
 import itertools
 from math import log10
+import os
 
 import numpy as np
+from sortedcontainers import SortedDict
 
 from files import PostingList
 
@@ -17,7 +20,7 @@ Class used to represent an inverted file
 
 class InvertedFile:
 
-    def __init__(self, documents):
+    def __init__(self, documents, memory_limit= 100):
         '''
         Init an inverted file by creating a voc and the associated pl
         slide 6
@@ -26,11 +29,20 @@ class InvertedFile:
         an inverted file is a mapping between a vocabulary of terms and posting lists
         :param documents: a list of documents
         '''
+        self.__time_start = datetime.now()
+
+        self.__postinglistfile = "invertedfiles/{}.plf"
+
+        __nb_tmp_inverted_file = 0
+
+        tmp_inverted_file_base_path = "invertedfiles/tmp-{%H%M%S}-".format(self.__time_start)
+
+        self.vocabulary_of_term = SortedDict()
+
         terms = set()
         for document in documents:
             terms.update(document.set_of_terms())
 
-        self.vocabulary_of_term = dict()
 
         for term in terms:
             frequency = 0
