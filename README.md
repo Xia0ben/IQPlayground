@@ -100,7 +100,7 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
 ## Third iteration 16/10/2017 -> 19/10/2017
 
 + Fagin’s threshold algorithm (TA) (Top-k improvement, so we don't do the FA before) (see slides 16 to 18, then 19 to 21 of teacher's slideshow), with Espilon-approximation of Top-K Answers (see slide 22 of teacher's slideshow)
-	-> TODO By ...
+	-> TODO By Zakaria
 
 + Random Indexing (see slide 32 of teacher's slideshow)
 	-> TODO By Bachir
