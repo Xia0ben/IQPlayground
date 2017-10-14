@@ -52,7 +52,4 @@ class Document:
         :param term: the term for wich we seek the frequency
         :return: the term-frequency of the term
         '''
-        if term in self.__counter:
-            return 1 + log10(self.__counter[term])
-        else:
-            return 0
+        return self.__counter[term]

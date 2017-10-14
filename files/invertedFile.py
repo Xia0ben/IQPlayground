@@ -20,7 +20,20 @@ Class used to represent an inverted file
 
 class InvertedFile:
 
-    def __init__(self, documents, memory_limit= 10):
+    @staticmethod
+    def _dump(path, voc):
+
+        with open(path, "w") as tmp_file:
+            for (term, [size, pl]) in voc.items():
+                pl_str = ""
+                for (doc_id, freq) in pl.alpha_access():
+                    if pl_str != "":
+                        pl_str = "{},{},{}".format(pl_str, doc_id, freq)
+                    else:
+                        pl_str = "{},{}".format(doc_id, freq)
+                tmp_file.write("{}\t{}\t{}\n".format(term, size, pl_str))
+
+    def __init__(self, documents, memory_limit= 50):
         '''
         Init an inverted file by creating a voc and the associated pl
         slide 6
@@ -31,7 +44,7 @@ class InvertedFile:
         '''
         self.__time_start = datetime.now()
 
-        self.__postinglistfile = "invertedfiles/{}.plf"
+        self.__postinglist_file_path = "invertedfiles/{:%H%M%S}.plf".format(self.__time_start)
 
         __nb_tmp_inverted_file = 0
 
@@ -39,26 +52,84 @@ class InvertedFile:
 
         doc_count = 0
         tmp_voc = SortedDict()
+        tmp_path = "{}{}".format(tmp_inverted_file_base_path,
+                                 __nb_tmp_inverted_file)
+        tmp_files_path = []
         for document in documents:
             for term in document.set_of_terms():
                 if term not in tmp_voc:
                     tmp_voc[term] = [0, PostingList()]
                 tmp_voc[term][0] += 1
-                tmp_voc[term][1].add_document(document.doc_id(), document.term_frequecy(term))
+                id = document.doc_id()
+                freq = document.term_frequecy(term)
+                tmp_voc[term][1].add_document(id, freq)
 
             doc_count += 1
 
             if doc_count == memory_limit:
                 doc_count = 0
-                with open("{}{}".format(tmp_inverted_file_base_path,
-                                        __nb_tmp_inverted_file),"w") as tmp_file:
-                    for (term, [size, pl]) in tmp_voc.items():
-                        pl_str = ""
-                        for (doc_id, freq) in pl.alpha_access():
-                            pl_str = "{}({},{})".format(pl_str, doc_id, freq)
-                        tmp_file.write("{}:{}:{}\n".format(term, size, pl_str))
-                    tmp_voc = SortedDict()
+                self._dump(tmp_path, tmp_voc)
+                tmp_files_path.append(tmp_path)
+                tmp_voc = SortedDict()
                 __nb_tmp_inverted_file += 1
+                tmp_path = "{}{}".format(tmp_inverted_file_base_path,
+                                         __nb_tmp_inverted_file)
+
+        self._dump(tmp_path, tmp_voc)
+        tmp_files_path.append(tmp_path)
+
+        tmp_files = []
+        tmp_used = []
+        for path in tmp_files_path:
+            tmp_used.append(False)
+            tmp_files.append(open(path, "r"))
+
+        tmp_lines = []
+        for file in tmp_files:
+            tmp_lines.append(file.readline())
+
+        self.vocabulary_of_term = SortedDict()
+
+        offset = 0
+
+        while True:
+
+            min_term = ''
+            min_lists = []
+            for i in range(len(tmp_files)):
+                if tmp_used[i] and tmp_lines[i] != '':
+                    tmp_lines[i] = tmp_files[i].readline()
+                    tmp_used[i] = tmp_lines[i] == ''
+
+                if tmp_lines[i] != '':
+                    term = tmp_lines[i].split('\t')[0]
+                    if i == 0:
+                        min_term = term
+                    if term < min_term:
+                        min_term = term
+                        min_lists = [i]
+                    elif term == min_term:
+                        min_lists.append(i)
+
+            if min_term == '':
+                break
+
+            pl_size = 0
+            pl_string = ""
+            for i in min_lists:
+                split = tmp_lines[i].split('\t')
+                pl_size += int(split[1])
+                pl_string = "{}{}".format(pl_string, split[2].replace("\n", ","))
+                tmp_used[i] = True
+
+            self.vocabulary_of_term[min_term] = (offset, pl_size)
+            offset += pl_size
+
+            with open(self.__postinglist_file_path, "ab") as file:
+                for val in pl_string.split(","):
+                    if val != '':
+                        file.write(int(val).to_bytes(4, byteorder='big', signed=False))
+
 
         # parallel read
         # combination
@@ -71,7 +142,6 @@ class InvertedFile:
         terms = set()
         for document in documents:
             terms.update(document.set_of_terms())
-
 
         for term in terms:
             frequency = 0
