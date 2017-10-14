@@ -80,16 +80,13 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
 + Better parse the different XML elements of the file so that it is possible to ponderate the computation of the scores in the inverted file depending on whether the terms are the title or if they must agree with a particular date, ...
 	-> TODO By Zakaria
 
-+ Deactivable (through UI) stemming and stop words removal that is going to influence th creation of the (IF YOU CHOOSE THAT, YOU'LL NEED TO ADD ANOTHER TASK)
++ Deactivable (through UI) stemming and stop words removal that is going to influence the creation of the
 	-> TODO By Omar
 
 + Merge-based creation of the inverted file (see slide 24 of teacher's slideshow)
 	-> TODO By Alexis
 
-+ PL Compression (see slide 25 of teacher's slideshow)
-	-> TODO By Omar
-
-+ Variable Byte Encoding (see slides 26 to 29 of teacher's slideshow)
++ PL Compression : Variable Byte Encoding (see slides 26 to 29 of teacher's slideshow)
 	-> TODO By Bachir
 
 ## Second code review 16/10/2017 from 8 to 10 a.m.
@@ -102,19 +99,16 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
 
 ## Third iteration 16/10/2017 -> 19/10/2017
 
-+ Fagin’s top-k query algorithm (FA) (see slides 16 to 18 of teacher's slideshow)
-	-> TODO By ...
-
-+ Fagin’s threshold algorithm (TA) (see slides 19 to 21 of teacher's slideshow)
-	-> TODO By ...
-
-+ Espilon-approximation of Top-K Answers (see slide 22 of teacher's slideshow)
-	-> TODO By ...
++ Fagin’s threshold algorithm (TA) (Top-k improvement, so we don't do the FA before) (see slides 16 to 18, then 19 to 21 of teacher's slideshow), with Espilon-approximation of Top-K Answers (see slide 22 of teacher's slideshow)
+	-> TODO By Zakaria
 
 + Random Indexing (see slide 32 of teacher's slideshow)
+	-> TODO By Bachir
+
++ Allow OR clause instead of only AND
 	-> TODO By ...
 
-+ Improvement of the GUI and integration of the OR clause instead of only AND
++ Improvement of the GUI : Logging of queries ad associated results + performance indicators (processor time, memory used, number of reads of posting-lists...)
 	-> SHOTGUN By Benoit :D
 
 ## Third code review 19/10/2017 from 4:30 to 6:30 p.m.
