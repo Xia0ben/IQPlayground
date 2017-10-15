@@ -106,5 +106,8 @@ ENV/
 # Idea files
 /.idea
 
+# Zip files
+*.zip
+
 # Ignore pickle saves
 /pickles

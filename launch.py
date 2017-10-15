@@ -67,8 +67,8 @@ while True:
     print("Your query is : {}".format(query))
     if documents is not None:
         print("You may be interested by the following documents:")
-        print("\tscore\t |\tdocument")
+        print("\t   score |\tdocument")
         for doc in documents:
-            print("\t{:8.5f} | {}".format(doc[1], doc[0]))
+            print("\t{:8.5f} |\t{}".format(doc[1], doc[0]))
     else:
         print("Sorry no documents may be of interest to you. :(")

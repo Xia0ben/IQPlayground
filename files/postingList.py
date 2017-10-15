@@ -1,3 +1,4 @@
+from sortedcontainers import SortedDict
 
 '''
 PostingList class
@@ -13,7 +14,7 @@ class PostingList:
 
     def __init__(self):
         self.ord_elems = list()
-        self.rand_elems = dict()
+        self.rand_elems = SortedDict()
 
     def add_document(self, document_id, score):
         '''
@@ -22,7 +23,7 @@ class PostingList:
             random access : use a dict for log time access
             ordered access : use a list
         :param document_id: the doc to add to the posting list
-        :param score: the score of the doccument
+        :param score: the score of the document
         '''
         rank = 0
         for (doc_id, doc_score) in self.ord_elems:
@@ -34,6 +35,10 @@ class PostingList:
 
         self.ord_elems = self.ord_elems[:rank] + [(document_id, score)] + self.ord_elems[rank:(len(self.ord_elems))]
         self.rand_elems[document_id] = score
+
+    def alpha_access(self):
+        for (key, val) in self.rand_elems.items():
+            yield (key, val)
 
     def ordered_access(self):
         '''
