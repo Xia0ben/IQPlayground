@@ -40,9 +40,15 @@ class NaiveAlgorithm(BaseAlgorithm):
 
         results = []
 
+        kept = []
+
+        for(doc_id, scores) in mapping_documents_scores.items():
+            if 0 not in scores:
+                kept.append(doc_id)
+
         # for each document we push it and its score to a heapq
-        for (doc_id, scores) in mapping_documents_scores.items():
-            heapq.heappush(results, (np.sum(scores), doc_id))
+        for doc_id in kept:
+            heapq.heappush(results, (np.sum(mapping_documents_scores[doc_id]), doc_id))
 
         # to use heapq we had to inverse doc_id and score in the tuples so we reverse them back during return
         return [(t[1], t[0]) for t in heapq.nlargest(number_of_results, results)]

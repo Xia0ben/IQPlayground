@@ -6,7 +6,7 @@ import os
 import numpy as np
 from sortedcontainers import SortedDict
 
-from files import PostingList, FilePostingList
+from files import PostingList, FileToPostingLists
 
 '''
 InvertedFile class
@@ -118,56 +118,27 @@ class InvertedFile:
             pl_string = ""
             for i in min_lists:
                 split = tmp_lines[i].split('\t')
-                pl_size += int(split[1])
                 pl_string = "{}{}".format(pl_string, split[2].replace("\n", ","))
                 tmp_used[i] = True
 
-            self.vocabulary_of_term[min_term] = (offset, pl_size)
-            offset += pl_size
+            freq = 0
 
             with open(self.__postinglist_file_path, "ab") as file:
                 for val in pl_string.split(","):
                     if val != '':
-                        file.write(int(val).to_bytes(4, byteorder='big', signed=False))
+                        freq += 1
+                        pl_size += file.write(int(val).to_bytes(4, byteorder='big', signed=False))
 
+            idf = log10(len(documents) / (1 + (freq/2)))
+
+            self.vocabulary_of_term[min_term] = (offset, pl_size, idf)
+            offset += pl_size
+
+        self.__postinglist_gen = FileToPostingLists(self.__postinglist_file_path)
 
         # parallel read
         # combination
         # final PL
-
-    def __old_init__(self, documents):
-
-        self.vocabulary_of_term = SortedDict()
-
-        terms = set()
-        for document in documents:
-            terms.update(document.set_of_terms())
-
-        for term in terms:
-            frequency = 0
-            tf_dict = dict()
-
-            for document in documents:
-                # Calc of the term frequency in each document
-                # Slide 8
-                term_frequency = document.term_frequecy(term)
-                if term_frequency > 0:
-                    frequency += 1
-                    tf_dict[document.doc_id()] = term_frequency
-
-            # Calc of the idf of the term
-            # Slide 9 & 10
-            idf = log10(len(documents) / (1 + frequency))
-
-            posting_list = PostingList()
-
-            for document_id in tf_dict:
-                # Calc of the score for each document and add it to the posting list
-                # Slide 11
-                posting_list.add_document(document_id, tf_dict[document_id] * idf)
-
-            self.vocabulary_of_term[term] = {'size': len(posting_list),
-                                             'posting_list': posting_list}
 
     def parallel_scan(self, terms):
         '''
@@ -183,10 +154,14 @@ class InvertedFile:
         found_docs = []
         ranks = dict()
         ordonated_accesses = dict()
+        posting_lists = dict()
+        sizes = dict()
         for term in [term for term in terms if term in self.vocabulary_of_term]:
             ranks[term] = 0
+            offset, pl_size, idf = self.vocabulary_of_term[term]
             # we create a list of generator witch yield their results
-            ordonated_accesses[term] = self.vocabulary_of_term[term]['posting_list'].ordered_access()
+            posting_lists[term], sizes[term] = self.__postinglist_gen.gen_posting_list(offset, pl_size, idf)
+            ordonated_accesses[term] = posting_lists[term].ordered_access()
 
         # while we have a term to explore we continue
         turn = len(ranks) > 0
@@ -195,7 +170,7 @@ class InvertedFile:
             term = next(filter(lambda x: ranks[x] == np.min(list(ranks.values())), ranks.keys()))
             ranks[term] += 1
 
-            if ranks[term] <= self.vocabulary_of_term[term]['size']:
+            if ranks[term] <= sizes[term]:
                 # we do the ordonated access to look for the document
                 item = next(ordonated_accesses[term])
                 if item[0] not in found_docs:
@@ -204,5 +179,5 @@ class InvertedFile:
                     yield item
                     # for each other terms we send their score for the document
                     for other_term in [o_term for o_term in terms if o_term is not term]:
-                        yield (item[0], self.vocabulary_of_term[term]['posting_list'].document_score(item[0]))
-            turn = np.any(list(map(lambda w: ranks[w] < self.vocabulary_of_term[w]['size'], ranks.keys())))
+                        yield (item[0], posting_lists[other_term].document_score(item[0]))
+            turn = np.any(list(map(lambda w: ranks[w] < sizes[w], ranks.keys())))
