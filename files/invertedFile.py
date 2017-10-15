@@ -140,6 +140,13 @@ class InvertedFile:
         # combination
         # final PL
 
+    def get_documents(self, term):
+        offset, pl_size, idf = self.vocabulary_of_term[term]
+        # we create a list of generator witch yield their results
+        posting_list, _ = self.__postinglist_gen.gen_posting_list(offset, pl_size, idf)
+        for elem in posting_list.ordered_access():
+            yield elem
+
     def parallel_scan(self, terms):
         '''
         do the parallel scan of the inverted file
