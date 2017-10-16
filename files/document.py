@@ -43,7 +43,7 @@ class Document:
         here we use the fact that the first token is always the docid in the documents of our corpus
         :return: the docid of the document
         '''
-        return self.__tokens[0]
+        return self.__tokens[1]
 
     def term_frequecy(self, term):
         '''
@@ -52,7 +52,4 @@ class Document:
         :param term: the term for wich we seek the frequency
         :return: the term-frequency of the term
         '''
-        if term in self.__counter:
-            return 1 + log10(self.__counter[term])
-        else:
-            return 0
+        return self.__counter[term]
