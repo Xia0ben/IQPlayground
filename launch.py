@@ -2,16 +2,18 @@ import os.path
 import pickle
 
 from files import InvertedFile, Reader
-from algorithm import NaiveAlgorithm, SimpleScanAlgorithm
+from algorithm import NaiveAlgorithm, SimpleScanAlgorithm,  FA_Algorithm
 
 ALGORITHMS = {
     "NAIVE": NaiveAlgorithm,
-    "SIMPLE": SimpleScanAlgorithm
+    "SIMPLE": SimpleScanAlgorithm,
+    "FA": FA_Algorithm
 }
 
 ALGORITHMS_DESC = {
     "NAIVE": "A naive Top-K algorithm adding the scores of the documents",
-    "SIMPLE": "A simple algorithm who select the documents where all the queried words appears"
+    "SIMPLE": "A simple algorithm who select the documents where all the queried words appears",
+    "FA": "Fagin's top-k query algorithm (FA)"
 }
 DEFAULT_NUMBER_OF_RESULTS = 5
 DEFAULT_ALGORITHM = ALGORITHMS["NAIVE"]
@@ -65,7 +67,7 @@ while True:
     documents = algorithm.execute(query, inv_file, number_of_results)
 
     print("Your query is : {}".format(query))
-    if documents is not None:
+    if documents is not None and len(documents) > 0:
         print("You may be interested by the following documents:")
         print("\t   score |\tdocument")
         for doc in documents:
