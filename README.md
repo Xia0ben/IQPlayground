@@ -106,7 +106,7 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
 	-> TODO By Bachir
 
 + Allow OR clause instead of only AND
-	-> TODO By ...
+	-> TODO By Alexis
 
 + Improvement of the GUI : Logging of queries ad associated results + performance indicators (processor time, memory used, number of reads of posting-lists...)
 	-> SHOTGUN By Benoit :D

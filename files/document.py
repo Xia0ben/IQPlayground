@@ -1,9 +1,10 @@
 from collections import Counter
 from math import log10
-import re
+import re,string
 
+from nltk.corpus import stopwords
 from nltk import word_tokenize
-
+from files import stemmer
 '''
 Document class
 
@@ -15,8 +16,7 @@ Class used to represent a document in memory
 
 
 class Document:
-
-    def __init__(self, xml_text, ignore_case= True):
+    def __init__(self, xml_text, ignore_case=True, stemming=True):
         '''
         Init of the document
         :param xml_text: xml text representing the document
@@ -25,7 +25,19 @@ class Document:
         text = re.sub("<[^>]*>", "", xml_text)
         if ignore_case:
             text = text.lower()
-        self.__tokens = word_tokenize(text)
+        tokens = word_tokenize(text)
+        cachedStopWords = stopwords.words("english")
+        punctuations = list(string.punctuation)
+        self.__tokens=[]
+        for i in range(len(tokens)):
+            if tokens[i] not in (cachedStopWords, punctuations):
+                self.__tokens.append(tokens[i])
+
+        if stemming:
+            sm = stemmer.Stemmer()
+            for i in range(len(self.__tokens)):
+                self.__tokens[i] = sm.stem(self.__tokens[i], 0, len(self.__tokens[i])-1)
+
         self.__counter = Counter(self.__tokens)
 
     def __str__(self):
