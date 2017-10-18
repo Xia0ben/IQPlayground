@@ -55,6 +55,7 @@ class InvertedFile:
         tmp_path = "{}{}".format(tmp_inverted_file_base_path,
                                  __nb_tmp_inverted_file)
         tmp_files_path = []
+
         for document in documents:
             for term in document.set_of_terms():
                 if term not in tmp_voc:
@@ -89,6 +90,7 @@ class InvertedFile:
             tmp_lines.append(file.readline())
 
         self.vocabulary_of_term = SortedDict()
+        self.term_random_access = SortedDict()
 
         offset = 0
 
@@ -116,6 +118,9 @@ class InvertedFile:
 
             pl_size = 0
             pl_string = ""
+
+            term_rdm_access = [0,0,0,0,0,0]
+
             for i in min_lists:
                 split = tmp_lines[i].split('\t')
                 pl_string = "{}{}".format(pl_string, split[2].replace("\n", ","))
@@ -128,6 +133,8 @@ class InvertedFile:
                     if val != '':
                         freq += 1
                         pl_size += file.write(int(val).to_bytes(4, byteorder='big', signed=False))
+
+            self.term_random_access[min_term] = term_rdm_access
 
             idf = log10(len(documents) / (1 + (freq/2)))
 
@@ -163,6 +170,11 @@ class InvertedFile:
         ordonated_accesses = dict()
         posting_lists = dict()
         sizes = dict()
+
+        for term in terms:
+            if term not in self.vocabulary_of_term:
+                return
+
         for term in [term for term in terms if term in self.vocabulary_of_term]:
             ranks[term] = 0
             offset, pl_size, idf = self.vocabulary_of_term[term]

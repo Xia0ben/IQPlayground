@@ -28,5 +28,5 @@ class FileToPostingLists:
                 doc_id = int.from_bytes(file.read(4), byteorder='big')
                 score = idf * (1 + log10(int.from_bytes(file.read(4), byteorder='big')))
                 posting_list.add_document(doc_id, score)
-                read += 8
+                read += 4+4
         return posting_list, pl_size
