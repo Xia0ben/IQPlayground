@@ -2,18 +2,20 @@ import os.path
 import pickle
 
 from files import InvertedFile, Reader
-from algorithm import NaiveAlgorithm, SimpleScanAlgorithm,  FA_Algorithm
+from algorithm import NaiveAlgorithm, SimpleScanAlgorithm,  FA_Algorithm, TA_Algorithm
 
 ALGORITHMS = {
     "NAIVE": NaiveAlgorithm,
     "SIMPLE": SimpleScanAlgorithm,
-    "FA": FA_Algorithm
+    "FA": FA_Algorithm,
+    "TA": TA_Algorithm
 }
 
 ALGORITHMS_DESC = {
     "NAIVE": "A naive Top-K algorithm adding the scores of the documents",
     "SIMPLE": "A simple algorithm who select the documents where all the queried words appears",
-    "FA": "Fagin's top-k query algorithm (FA)"
+    "FA": "Fagin's top-k query algorithm (FA)",
+    "TA": "Fagin’s threshold algorithm (TA)"
 }
 DEFAULT_NUMBER_OF_RESULTS = 5
 DEFAULT_ALGORITHM = ALGORITHMS["NAIVE"]
