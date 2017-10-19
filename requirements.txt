@@ -1,3 +1,4 @@
 nltk
 numpy
 sortedcontainers
+git+https://git.gnome.org/browse/pygobject#egg=pygobject==3.20
