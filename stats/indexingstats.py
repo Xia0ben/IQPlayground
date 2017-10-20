@@ -17,10 +17,12 @@ class IndexingStats:
         self.start_time = datetime.now()
         self.finish_time = None
         self.file_size = 0
+        self.total_time = None
 
     def stop(self):
         if self.finish_time is None:
             self.finish_time = datetime.now()
+            self.total_time = self.finish_time - self.start_time
         else:
             raise ArithmeticError()
 

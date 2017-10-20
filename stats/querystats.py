@@ -18,7 +18,7 @@ class QueryStats:
         self.pl_accesses = 0
         self.finish_time = None
         self.memory_accesses = 0
-        self.total_time = self.start_time
+        self.total_time = None
 
     def stop(self):
         if self.finish_time is None:
