@@ -110,15 +110,34 @@ class Exec:
         self.current_status = "Indexing - Finished - You can query"
 
         SC.last_indexing().stop()
+        SC.last_indexing().log(
+                 files,
+                 ignore_case,
+                 ignore_stop_words,
+                 stemming,
+                 use_weights,
+                 title_weight,
+                 date_weight,
+                 memory_limit,
+                 use_vbytes)
 
 
     def query(self, query="", algorithm="NAIVE", number_of_results=5):
         SC.new_query(query)
+
         self.current_status = "Querying - Using {} alogrithm".format(algorithm)
         documents = self.ALGORITHMS[algorithm]().execute(query,
                                                          self.inv_file,
                                                          number_of_results)
         SC.last_query().stop()
+        if documents is not None:
+            SC.last_query().log(algorithm,
+                                number_of_results,
+                                len(documents))
+        else:
+            SC.last_query().log(algorithm,
+                                number_of_results,
+                                0)
 
 
         results = []

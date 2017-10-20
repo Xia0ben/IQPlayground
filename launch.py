@@ -1,6 +1,5 @@
 
 from executable import Executable
-from algorithm import NaiveAlgorithm, SimpleScanAlgorithm,  FA_Algorithm, TA_Algorithm
 from stats import StatsControl as SC
 
 ALGORITHMS_DESC = {

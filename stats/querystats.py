@@ -35,6 +35,23 @@ class QueryStats:
         if self.finish_time is None:
             self.pl_accesses += 1
 
+    def log(self,
+            algorithm="NAIVE",
+            number_of_results=5,
+            received_results=5):
+        log_str = """
+Query configuration:
+    Algorithm used : {}
+    Number of results asked : {}
+    Number of results returned : {}
+{}
+""".format(algorithm,
+           number_of_results,
+           received_results,
+           self.__str__())
+        with open("indexing.logs", "a") as file:
+            file.write(log_str)
+
     def __str__(self):
         if self.finish_time is None:
             tot_time = datetime.now() - self.start_time
