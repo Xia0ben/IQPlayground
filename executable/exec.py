@@ -39,6 +39,16 @@ class Exec:
     PICKLES = ["pickles/if.pkl", "pickles/ids.pkl"]
 
     def __init__(self):
+        try:
+            os.stat("pickles")
+        except:
+            os.mkdir("pickles")
+
+        try:
+            os.stat("invertedfiles")
+        except:
+            os.mkdir("invertedfiles")
+
         if os.path.isfile(self.PICKLES[0]):
             with open(self.PICKLES[0], "rb") as file:
                 self.inv_file = pickle.load(file)
