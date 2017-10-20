@@ -3,6 +3,7 @@ import pickle
 
 from files import InvertedFile, Reader
 from algorithm import NaiveAlgorithm, SimpleScanAlgorithm,  FA_Algorithm
+from stats import StatsControl as SC
 
 ALGORITHMS = {
     "NAIVE": NaiveAlgorithm,
@@ -64,7 +65,11 @@ algorithm = algorithm()
 while True:
     query = input("Query ? ")
 
+    SC.new_query(query)
+
     documents = algorithm.execute(query, inv_file, number_of_results)
+
+    SC.last_query().stop()
 
     print("Your query is : {}".format(query))
     if documents is not None and len(documents) > 0:
@@ -74,3 +79,5 @@ while True:
             print("\t{:8.5f} |\t{}".format(doc[1], doc[0]))
     else:
         print("Sorry no documents may be of interest to you. :(")
+
+    print(SC.last_query())

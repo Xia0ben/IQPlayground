@@ -1,5 +1,6 @@
 from sortedcontainers import SortedDict
 
+from stats import StatsControl as SC
 '''
 PostingList class
 
@@ -38,6 +39,8 @@ class PostingList:
 
     def alpha_access(self):
         for (key, val) in self.rand_elems.items():
+            if SC.last_query() is not None:
+                SC.last_query().add_pl_access()
             yield (key, val)
 
     def ordered_access(self):
@@ -46,6 +49,8 @@ class PostingList:
         :return: a tuple (document_id, score)
         '''
         for elem in self.ord_elems:
+            if SC.last_query() is not None:
+                SC.last_query().add_pl_access()
             yield elem
 
     def document_score(self, document_id):
@@ -54,6 +59,8 @@ class PostingList:
         :param document_id: the document
         :return: the score of the document
         '''
+        if SC.last_query() is not None:
+            SC.last_query().add_pl_access()
         if document_id in self.rand_elems:
             return self.rand_elems[document_id]
         return 0

@@ -1,14 +1,15 @@
 from math import log10
 
 from files import PostingList
+from stats import StatsControl as SC
 
 '''
-PostingList class
+FileToPostingLists class
 
 author :Alexis Fossart
 date :  08/10/2017
 
-Class used to represent a posting list
+Class used to read pl from file
 '''
 
 
@@ -21,6 +22,7 @@ class FileToPostingLists:
         posting_list = PostingList()
         pl_size = 0
         with open(self.__pl_file, "rb") as file:
+            SC.last_query().add_mem_access()
             file.seek(offset)
             read = 0
             while read < size:

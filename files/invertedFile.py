@@ -147,6 +147,9 @@ class InvertedFile:
         # combination
         # final PL
 
+    def get_terms(self):
+        return list([term for term in self.vocabulary_of_term.keys()])
+
     def get_documents(self, term):
         offset, pl_size, idf = self.vocabulary_of_term[term]
         # we create a list of generator witch yield their results
