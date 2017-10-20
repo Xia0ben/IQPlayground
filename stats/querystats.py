@@ -18,10 +18,12 @@ class QueryStats:
         self.pl_accesses = 0
         self.finish_time = None
         self.memory_accesses = 0
+        self.total_time = self.start_time
 
     def stop(self):
         if self.finish_time is None:
             self.finish_time = datetime.now()
+            self.total_time = self.finish_time - self.start_time
         else:
             raise ArithmeticError()
 

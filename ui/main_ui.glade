@@ -177,7 +177,6 @@
         </child>
         <child>
           <object class="GtkBox" id="query_box">
-            <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
             <property name="spacing">20</property>
@@ -246,9 +245,10 @@
                     <property name="can_focus">False</property>
                     <property name="active_id">1</property>
                     <items>
-                      <item id="1" translatable="yes">Naive</item>
-                      <item id="2" translatable="yes">Simple</item>
-                      <item id="3" translatable="yes">Fagins</item>
+                      <item id="1" translatable="yes">NAIVE</item>
+                      <item id="2" translatable="yes">SIMPLE</item>
+                      <item id="3" translatable="yes">FA</item>
+                      <item id="4" translatable="yes">TA</item>
                     </items>
                     <signal name="changed" handler="algo_combo_changed" swapped="no"/>
                   </object>
@@ -402,6 +402,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="row_spacing">3</property>
+                <property name="column_spacing">30</property>
                 <child>
                   <object class="GtkSeparator" id="statistics_separator">
                     <property name="visible">True</property>
@@ -410,17 +411,17 @@
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">1</property>
-                    <property name="width">3</property>
+                    <property name="width">5</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="statistics_label">
+                  <object class="GtkLabel" id="query_statistics_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
                     <property name="valign">start</property>
                     <property name="margin_left">5</property>
-                    <property name="label" translatable="yes">Statistics</property>
+                    <property name="label" translatable="yes">Query statistics</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
@@ -428,7 +429,112 @@
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">0</property>
-                    <property name="width">3</property>
+                    <property name="width">5</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="start_time_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Start time: </property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="finish_time_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">End time:</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="end_time_tofill">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="start_time_tofill">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="disk_accesses_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Disk accesses:</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">4</property>
+                    <property name="top_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="pl_accesses_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">PL accesses: </property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">3</property>
+                    <property name="top_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="disk_accesses_tofill">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">4</property>
+                    <property name="top_attach">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="pl_accesses_tofill">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">3</property>
+                    <property name="top_attach">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="total_time_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Total time:</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="total_time_tofill">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
               </object>
@@ -487,9 +593,5 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkEntryCompletion" id="entrycompletion1"/>
-  <object class="GtkRadioAction" id="radioaction1">
-    <property name="draw_as_radio">True</property>
   </object>
 </interface>
