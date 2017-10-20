@@ -7,6 +7,7 @@ import numpy as np
 from sortedcontainers import SortedDict
 
 from files import PostingList, FileToPostingLists
+from algorithm import VariableByte
 
 '''
 InvertedFile class
@@ -33,7 +34,10 @@ class InvertedFile:
                         pl_str = "{},{}".format(doc_id, freq)
                 tmp_file.write("{}\t{}\t{}\n".format(term, size, pl_str))
 
-    def __init__(self, documents, memory_limit= 50):
+    def __init__(self,
+                 documents,
+                 use_vbytes=True,
+                 memory_limit= 50):
         '''
         Init an inverted file by creating a voc and the associated pl
         slide 6
@@ -55,6 +59,7 @@ class InvertedFile:
         tmp_path = "{}{}".format(tmp_inverted_file_base_path,
                                  __nb_tmp_inverted_file)
         tmp_files_path = []
+
         for document in documents:
             for term in document.set_of_terms():
                 if term not in tmp_voc:
@@ -89,6 +94,7 @@ class InvertedFile:
             tmp_lines.append(file.readline())
 
         self.vocabulary_of_term = SortedDict()
+        self.term_random_access = SortedDict()
 
         offset = 0
 
@@ -116,6 +122,9 @@ class InvertedFile:
 
             pl_size = 0
             pl_string = ""
+
+            term_rdm_access = [0,0,0,0,0,0]
+
             for i in min_lists:
                 split = tmp_lines[i].split('\t')
                 pl_string = "{}{}".format(pl_string, split[2].replace("\n", ","))
@@ -127,18 +136,33 @@ class InvertedFile:
                 for val in pl_string.split(","):
                     if val != '':
                         freq += 1
-                        pl_size += file.write(int(val).to_bytes(4, byteorder='big', signed=False))
+                        if use_vbytes:
+                            bytes_val = VariableByte.encoding_number(int(val))
+                        else:
+                            bytes_val = int(val).to_bytes(4, byteorder='big', signed=False)
+
+                        pl_size += file.write(bytes_val)
+
+            self.term_random_access[min_term] = term_rdm_access
 
             idf = log10(len(documents) / (1 + (freq/2)))
 
             self.vocabulary_of_term[min_term] = (offset, pl_size, idf)
             offset += pl_size
 
-        self.__postinglist_gen = FileToPostingLists(self.__postinglist_file_path)
+        for file in tmp_files:
+            file.close()
+        for file_path in tmp_files_path:
+            os.remove(file_path)
+
+        self.__postinglist_gen = FileToPostingLists(self.__postinglist_file_path, use_vbytes)
 
         # parallel read
         # combination
         # final PL
+
+    def get_terms(self):
+        return list([term for term in self.vocabulary_of_term.keys()])
 
     def get_documents(self, term):
         offset, pl_size, idf = self.vocabulary_of_term[term]
@@ -163,6 +187,11 @@ class InvertedFile:
         ordonated_accesses = dict()
         posting_lists = dict()
         sizes = dict()
+
+        for term in terms:
+            if term not in self.vocabulary_of_term:
+                return
+
         for term in [term for term in terms if term in self.vocabulary_of_term]:
             ranks[term] = 0
             offset, pl_size, idf = self.vocabulary_of_term[term]
