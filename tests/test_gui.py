@@ -65,7 +65,7 @@ class Handler:
 
         #TODO here get the right document by ID
 
-        return document
+        #return document
 
     def toggle_stemming(self, button):
         print("Toggle stemming to " + str(button.get_active()))
@@ -108,11 +108,17 @@ class Handler:
     def start_indexation(self, button):
         print("Start indexation")
 
+        if len(self.indexation_parameters["files_list"]) <= 0:
+            print("No file has been specified !")
+            return
+
         loading_box = builder.get_object("loading_box")
         loading_box.set_visible(True)
 
+        indexation_statistics_box = builder.get_object("indexation_statistics_box")
         query_box = builder.get_object("query_box")
         results_box = builder.get_object("results_box")
+        indexation_statistics_box.set_visible(False)
         query_box.set_visible(False)
         results_box.set_visible(False)
 
@@ -154,6 +160,24 @@ class Handler:
 
         loading_box.set_visible(False)
 
+        # TODO Fill indexation statistics here
+
+        indexation_stats = StatsControl.last_indexing()
+
+        indexation_start_time_tofill = builder.get_object("indexation_start_time_tofill")
+        indexation_start_time_tofill.set_text("{:%H:%M:%S.%f}".format(indexation_stats.start_time))
+
+        indexation_end_time_tofill = builder.get_object("indexation_end_time_tofill")
+        indexation_end_time_tofill.set_text("{:%H:%M:%S.%f}".format(indexation_stats.finish_time))
+
+        indexation_total_time_tofill = builder.get_object("indexation_total_time_tofill")
+        indexation_total_time_tofill.set_text("{}".format(indexation_stats.total_time))
+
+        indexation_file_size_tofill = builder.get_object("indexation_file_size_tofill")
+        indexation_file_size_tofill.set_text(str(indexation_stats.file_size))
+
+        indexation_statistics_box.set_visible(True)
+
         query_box.set_visible(True)
 
     def algo_combo_changed(self, combobox):
@@ -171,31 +195,47 @@ class Handler:
     def start_query(self, button):
         print("Start query")
 
+        if self.query_parameters["query"] == "":
+            print("No query has been specified !")
+            return
+
         loading_box = builder.get_object("loading_box")
         loading_box.set_visible(True)
+
+        print("Dict : {}".format(self.query_parameters))
 
         results = self.backend.query(query=self.query_parameters["query"],
                            algorithm=self.query_parameters["algorithm"],
                            number_of_results=self.query_parameters["results_number"])
 
-        stats = StatsControl.last_query()
+        query_stats = StatsControl.last_query()
 
         loading_box.set_visible(False)
 
         start_time_tofill = builder.get_object("start_time_tofill")
-        start_time_tofill.set_text("{:%H:%M:%S.%f}".format(stats.start_time))
+        start_time_tofill.set_text("{:%H:%M:%S.%f}".format(query_stats.start_time))
 
         end_time_tofill = builder.get_object("end_time_tofill")
-        end_time_tofill.set_text("{:%H:%M:%S.%f}".format(stats.finish_time))
+        end_time_tofill.set_text("{:%H:%M:%S.%f}".format(query_stats.finish_time))
 
-        end_time_tofill = builder.get_object("total_time_tofill")
-        end_time_tofill.set_text("{}".format(stats.total_time))
+        total_time_tofill = builder.get_object("total_time_tofill")
+        total_time_tofill.set_text("{}".format(query_stats.total_time))
 
         pl_accesses_tofill = builder.get_object("pl_accesses_tofill")
-        pl_accesses_tofill.set_text(str(stats.pl_accesses))
+        pl_accesses_tofill.set_text(str(query_stats.pl_accesses))
 
         disk_accesses_tofill = builder.get_object("disk_accesses_tofill")
-        disk_accesses_tofill.set_text(str(stats.memory_accesses))
+        disk_accesses_tofill.set_text(str(query_stats.memory_accesses))
+
+        results_text = "\t Score     |\tDOCID   |\t   File path \n"
+        for result in results:
+            results_text += ("\t{:8.5f} |\t{:8} |\t{}".format(result[1], result[0], result[2])) + "\n"
+
+        print("results" + results_text)
+
+        results_textview = builder.get_object("results_textview")
+        results_textview_buffer = results_textview.get_buffer()
+        results_textview_buffer.set_text(results_text)
 
         results_box = builder.get_object("results_box")
         results_box.set_visible(True)
