@@ -8,6 +8,7 @@ from sortedcontainers import SortedDict
 
 from files import PostingList, FileToPostingLists
 from algorithm import VariableByte
+from algorithm import RandomIndex
 
 '''
 InvertedFile class
@@ -46,6 +47,9 @@ class InvertedFile:
         an inverted file is a mapping between a vocabulary of terms and posting lists
         :param documents: a list of documents
         '''
+
+        self.doc_id_vectors_list = dict()  # HERE
+
         self.__time_start = datetime.now()
 
         self.__postinglist_file_path = "invertedfiles/{:%H%M%S}.plf".format(self.__time_start)
@@ -61,6 +65,8 @@ class InvertedFile:
         tmp_files_path = []
 
         for document in documents:
+            self.doc_id_vectors_list[document.doc_id()] = RandomIndex.get_random_index_vector() #HERE
+            # print(self.doc_id_vectors_list[document.doc_id()])   #HERE
             for term in document.set_of_terms():
                 if term not in tmp_voc:
                     tmp_voc[term] = [0, PostingList()]
@@ -94,7 +100,7 @@ class InvertedFile:
             tmp_lines.append(file.readline())
 
         self.vocabulary_of_term = SortedDict()
-        self.term_random_access = SortedDict()
+        self.vectors_of_term = SortedDict() #HERE
 
         offset = 0
 
@@ -123,8 +129,6 @@ class InvertedFile:
             pl_size = 0
             pl_string = ""
 
-            term_rdm_access = [0,0,0,0,0,0]
-
             for i in min_lists:
                 split = tmp_lines[i].split('\t')
                 pl_string = "{}{}".format(pl_string, split[2].replace("\n", ","))
@@ -132,9 +136,16 @@ class InvertedFile:
 
             freq = 0
 
+            term_rdm_index = [0] * RandomIndex.get_n()  # HERE
+
             with open(self.__postinglist_file_path, "ab") as file:
+                if_doc_id = True  # HERE
                 for val in pl_string.split(","):
                     if val != '':
+                        if if_doc_id:  # HERE
+                            term_rdm_index += self.doc_id_vectors_list[val] #HERE
+                            term_rdm_index = list(map(lambda x, y: x + y, term_rdm_index,
+                                                      self.doc_id_vectors_list[val]))  # HERE
                         freq += 1
                         if use_vbytes:
                             bytes_val = VariableByte.encoding_number(int(val))
@@ -142,8 +153,11 @@ class InvertedFile:
                             bytes_val = int(val).to_bytes(4, byteorder='big', signed=False)
 
                         pl_size += file.write(bytes_val)
+                    if_doc_id = not if_doc_id  # HERE
 
-            self.term_random_access[min_term] = term_rdm_access
+            self.vectors_of_term[min_term] = term_rdm_index  # HERE
+            # print(self.vectors_of_term[min_term])   # HERE
+            # print()  # HERE
 
             idf = log10(len(documents) / (1 + (freq/2)))
 
@@ -217,3 +231,6 @@ class InvertedFile:
                     for other_term in [o_term for o_term in terms if o_term is not term]:
                         yield (item[0], posting_lists[other_term].document_score(item[0]))
             turn = np.any(list(map(lambda w: ranks[w] < sizes[w], ranks.keys())))
+
+    def get_vectors_of_term(self):
+        return self.vectors_of_term
