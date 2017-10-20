@@ -32,26 +32,29 @@ class Document2:
         self.__tokens_title = []
         self.__tokens_date = []
         self.__tokens_neutral = []
+        type_t = ""
         for token in text.split():
             if token.lower() == "<title>":
-                type="title"
+                type_t="title"
             elif token.lower() == "<date>":
-                type="date"
+                type_t="date"
             elif token.lower() == "</title>" or token.lower() == "</date>":
-                type=""
+                type_t=""
             else:
-                if type == "title":
+                if type_t == "title":
                     self.__tokens_title.append(token)
-                elif type == "date":
+                elif type_t == "date":
                     self.__tokens_date.append(token)
                 else:
                     if token.lower()[0] != "<" and token.lower()[-1] != ">":
                         self.__tokens_neutral.append(token)
 
-        self.counter_neutral = Counter(self.__tokens_neutral)
-        self.counter_title = Counter(self.__tokens_title)
-        self.counter_date = Counter(self.__tokens_date)
-
+        self.__counter_neutral = Counter(self.__tokens_neutral)
+        self.__counter_title = Counter(self.__tokens_title)
+        self.__counter_date = Counter(self.__tokens_date)
+        print(self.__counter_neutral)
+        print(self.__counter_title)
+        print(self.__counter_date)
 
 
 
@@ -70,7 +73,7 @@ class Document2:
         here we use the fact that the first token is always the docid in the documents of our corpus
         :return: the docid of the document
         '''
-        return self.__tokens[0]
+        return self.__tokens_neutral[0]
 
     def term_frequecy(self, term):
         '''
@@ -79,7 +82,9 @@ class Document2:
         :param term: the term for wich we seek the frequency
         :return: the term-frequency of the term
         '''
-        exist = False
+        return self.__counter_neutral[term.lower()] + self.__counter_title[term.lower()]*tw + self.__counter_date[term.lower()]*dw
+
+        """exist = False
         term_fre = 1
         if term in (self.counter_neutral) :
             term_fre += log10(self.counter_neutral[term])
@@ -93,10 +98,6 @@ class Document2:
         if not exist :
             return 0
 
-        return term_fre
-
-
-
-
+        return term_fre"""
 
 
