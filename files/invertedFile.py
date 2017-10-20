@@ -150,6 +150,11 @@ class InvertedFile:
             self.vocabulary_of_term[min_term] = (offset, pl_size, idf)
             offset += pl_size
 
+        for file in tmp_files:
+            file.close()
+        for file_path in tmp_files_path:
+            os.remove(file_path)
+
         self.__postinglist_gen = FileToPostingLists(self.__postinglist_file_path, use_vbytes)
 
         # parallel read

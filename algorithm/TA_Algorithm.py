@@ -9,7 +9,7 @@ from algorithm import BaseAlgorithm
 baseClass for an algorithm
 
 author :Belgharib Zakaria
-date :  18/10/2017
+date :  20/10/2017
 
 Abstract base class used to represent an algorithm
 '''
@@ -28,42 +28,32 @@ class TA_Algorithm(BaseAlgorithm):
         searched_terms = query.split()
         nbre_terms = len(searched_terms)
         k = number_of_results
-
         U_min = 999999999
         C = {}
         temp = {}
-
         for (doc_id, score) in inverted_file.parallel_scan(searched_terms):
-
-            if len(temp) < k :
-                if doc_id in temp :
-                    temp[doc_id] = [(temp[doc_id][0] + score), (temp[doc_id][1] + 1)]
+            if doc_id in temp:
+                temp[doc_id] = [(temp[doc_id][0] + score), (temp[doc_id][1] + 1)]
+            else:
+                temp[doc_id] = [score, 1]
+            if temp[doc_id][1] == nbre_terms:
+                if len(C) < k :
+                    C[doc_id] = temp[doc_id][0] / nbre_terms
+                    if C[doc_id] < U_min:
+                        U_min = C[doc_id]
                 else :
-                    temp[doc_id] = [score, 1]
-                if temp[doc_id][1] == nbre_terms :
-                        C[doc_id] = temp[doc_id][0] / nbre_terms
-                        if C[doc_id] < U_min:
-                            U_min = C[doc_id]
-            """else :
-                if doc_id in temp :
-                    temp[doc_id] = [(temp[doc_id][0] + score), (temp[doc_id][1] + 1)]
-                else :
-                    temp[doc_id] = [score, 1]
-                if temp[doc_id][1] == nbre_terms :
-                        temp[doc_id][0] = temp[doc_id][0] / nbre_terms
-                        if temp[doc_id][0] > U_min:
-                            kk=0
-                            for k, v in C.items() :
-                                if v == U_min:
-                                    kk=k
-                                    print(kk)
-                            del C[kk]
-                            C[doc_id] = temp[doc_id][0]
-                            U_min = min(C)
-                            print(doc_id)"""
+                    temp[doc_id][0] = temp[doc_id][0] / nbre_terms
+                    if temp[doc_id][0] > U_min:
+                        kk = 0
+                        for key, value in C.items():
+                            if value == U_min:
+                                kk = key
+                        del C[kk]
+                        C[doc_id] = temp[doc_id][0]
+                        U_min = min(C)
 
         T = [[k, v] for k, v in C.items()]
-        return T
+        return sorted(T)
 
 
 
