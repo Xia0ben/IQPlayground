@@ -1,16 +1,7 @@
-import os.path
-import pickle
 
-from files import InvertedFile, Reader
+from executable import Executable
 from algorithm import NaiveAlgorithm, SimpleScanAlgorithm,  FA_Algorithm, TA_Algorithm
 from stats import StatsControl as SC
-
-ALGORITHMS = {
-    "NAIVE": NaiveAlgorithm,
-    "SIMPLE": SimpleScanAlgorithm,
-    "FA": FA_Algorithm,
-    "TA": TA_Algorithm
-}
 
 ALGORITHMS_DESC = {
     "NAIVE": "A naive Top-K algorithm adding the scores of the documents",
@@ -19,33 +10,17 @@ ALGORITHMS_DESC = {
     "TA": "Fagin’s threshold algorithm (TA)"
 }
 DEFAULT_NUMBER_OF_RESULTS = 5
-DEFAULT_ALGORITHM = ALGORITHMS["NAIVE"]
+DEFAULT_ALGORITHM = "NAIVE"
 
 file_path = "latimes/la100590"
-pickle_path = file_path.replace("latimes", "pickles")
 
-# do we have a pickle file ?
-if os.path.isfile(pickle_path):
-    # yes we charge it
-    with open(pickle_path, "rb") as file:
-        inv_file = pickle.load(file)
-
-else:
-    # no we read the original file
-    documents = Reader.read_file(file_path)
-
-    print("Number of documents read : {}".format(len(documents)))
-
-    inv_file = InvertedFile(documents)
-
-    # we save the IF as a pickle file for next uses
-    with open(pickle_path, "wb") as file:
-        pickle.dump(inv_file, file)
-
-print("Loaded Inverted File - {} terms found".format(len(inv_file.vocabulary_of_term)))
+exe = Executable()
 
 algorithm = DEFAULT_ALGORITHM
 number_of_results = DEFAULT_NUMBER_OF_RESULTS
+
+if exe.inv_file is None:
+    exe.indexing([file_path])
 
 try:
     in_res = int(input("Number of results desired ? ").strip())
@@ -56,29 +31,25 @@ except ValueError:
 print("Algorithm description :")
 for (name, desc) in ALGORITHMS_DESC.items():
     print("{}\t- {}".format(name, desc))
-try:
-    in_alg = ALGORITHMS[input("Choose your algorithm : ").strip().upper()]
-    algorithm = in_alg
-except KeyError:
-    print("Non existing algorithm asked, using default : NAIVE")
 
-algorithm = algorithm()
+in_alg = input("Choose your algorithm : ").strip().upper()
+if in_alg not in ALGORITHMS_DESC:
+    algorithm = DEFAULT_ALGORITHM
+    print("Non existing algorithm asked, using default : NAIVE")
+else:
+    algorithm = in_alg
 
 while True:
     query = input("Query ? ")
 
-    SC.new_query(query)
-
-    documents = algorithm.execute(query, inv_file, number_of_results)
-
-    SC.last_query().stop()
+    documents = exe.query(query, algorithm, 5)
 
     print("Your query is : {}".format(query))
     if documents is not None and len(documents) > 0:
         print("You may be interested by the following documents:")
-        print("\t   score |\tdocument")
+        print("\t   score |\tdocument |\tfile_path")
         for doc in documents:
-            print("\t{:8.5f} |\t{}".format(doc[1], doc[0]))
+            print("\t{:8.5f} |\t{:8} |\t{}".format(doc[1], doc[0], doc[2]))
     else:
         print("Sorry no documents may be of interest to you. :(")
 
