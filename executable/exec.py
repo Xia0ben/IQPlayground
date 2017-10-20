@@ -39,6 +39,16 @@ class Exec:
     PICKLES = ["pickles/if.pkl", "pickles/ids.pkl"]
 
     def __init__(self):
+        try:
+            os.stat("pickles")
+        except:
+            os.mkdir("pickles")
+
+        try:
+            os.stat("invertedfiles")
+        except:
+            os.mkdir("invertedfiles")
+
         if os.path.isfile(self.PICKLES[0]):
             with open(self.PICKLES[0], "rb") as file:
                 self.inv_file = pickle.load(file)
@@ -64,6 +74,8 @@ class Exec:
         documents = []
 
         self.current_status = "Indexing - Starting"
+
+        self.__id_to_filename = SortedDict()
 
         for file in files:
             self.current_status = "Indexing - {}".format(file)
@@ -104,8 +116,9 @@ class Exec:
 
         results = []
 
-        for document in documents:
-            results.append([document[0],document[1],self.__id_to_filename[document[0]]])
+        if documents is not None:
+            for document in documents:
+                results.append([document[0],document[1],self.__id_to_filename[document[0]]])
 
         self.current_status = "Querying - Finished"
 

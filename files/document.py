@@ -54,13 +54,15 @@ class Document:
             elif token.lower() == "</title>" or token.lower() == "</date>":
                 type_t = ""
             else:
-                if type_t == "title":
-                    self.__tokens_title.append(token)
-                elif type_t == "date":
-                    self.__tokens_date.append(token)
-                else:
-                    if token.lower()[0] != "<" and token.lower()[-1] != ">":
-                        self.__tokens_neutral.append(token)
+                t_token = token.translate(str.maketrans('','',string.punctuation))
+                if len(t_token) > 0:
+                    if type_t == "title":
+                        self.__tokens_title.append(t_token)
+                    elif type_t == "date":
+                        self.__tokens_date.append(t_token)
+                    else:
+                        if token.lower()[0] != "<" and token.lower()[-1] != ">":
+                            self.__tokens_neutral.append(t_token)
 
         if ignore_stop_words:
             cached_stop_words = stopwords.words("english")
