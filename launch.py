@@ -1,4 +1,5 @@
 
+from os import walk
 from executable import Executable
 from stats import StatsControl as SC
 
@@ -11,20 +12,30 @@ ALGORITHMS_DESC = {
 DEFAULT_NUMBER_OF_RESULTS = 5
 DEFAULT_ALGORITHM = "NAIVE"
 
-file_paths = ["latimes/la100590",
-              "latimes/la010190",
-              "latimes/la060890",
-              "latimes/la091190",
-              "latimes/la121889",
-              "latimes/la010189"]
+
+def get_filelist_from_folderpath(folderpath):
+    filenameslist = []
+
+    # Get all file names in folder at first level only
+    for (dirpath, dirnames, filenames) in walk(folderpath):
+        filenameslist.extend(filenames)
+        break
+
+    # Concatenate them with folder path
+    filelist = [folderpath + "/" + filename for filename in filenameslist]
+
+    return filelist
+
+file_paths = get_filelist_from_folderpath("latimes")
 
 exe = Executable()
 
 algorithm = DEFAULT_ALGORITHM
 number_of_results = DEFAULT_NUMBER_OF_RESULTS
 
-if exe.inv_file is None:
-    exe.indexing(file_paths)
+memorylimit = 200
+
+exe.indexing(file_paths, memory_limit=memorylimit)
 
 print(SC.last_indexing())
 
