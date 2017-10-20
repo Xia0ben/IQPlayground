@@ -75,6 +75,8 @@ class Exec:
 
         self.current_status = "Indexing - Starting"
 
+        self.__id_to_filename = SortedDict()
+
         for file in files:
             self.current_status = "Indexing - {}".format(file)
             file_docs = Reader.read_file(file,
@@ -114,8 +116,9 @@ class Exec:
 
         results = []
 
-        for document in documents:
-            results.append([document[0],document[1],self.__id_to_filename[document[0]]])
+        if documents is not None:
+            for document in documents:
+                results.append([document[0],document[1],self.__id_to_filename[document[0]]])
 
         self.current_status = "Querying - Finished"
 
