@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sortedcontainers import SortedDict
 
-from stats import QueryStats
+from stats import QueryStats, IndexingStats
 
 '''
 StatsControl class
@@ -16,12 +16,15 @@ Class used to generate and control stats over the project
 
 class StatsControl:
 
+    indexings = []
     queries = []
-    last = None
+
+    @classmethod
+    def new_indexing(cls):
+        cls.indexings.append(IndexingStats())
 
     @classmethod
     def new_query(cls, query):
-        start = datetime.now()
         cls.queries.append(QueryStats(query))
 
     @classmethod
@@ -33,4 +36,15 @@ class StatsControl:
     @classmethod
     def all_queries(cls):
         for stats in cls.queries:
+            yield stats
+
+    @classmethod
+    def last_indexing(cls):
+        if len(cls.indexings) > 0:
+            return cls.indexings[-1]
+        return None
+
+    @classmethod
+    def all_indexings(cls):
+        for stats in cls.indexings:
             yield stats

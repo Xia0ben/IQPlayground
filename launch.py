@@ -12,7 +12,12 @@ ALGORITHMS_DESC = {
 DEFAULT_NUMBER_OF_RESULTS = 5
 DEFAULT_ALGORITHM = "NAIVE"
 
-file_path = "latimes/la100590"
+file_paths = ["latimes/la100590",
+              "latimes/la010190",
+              "latimes/la060890",
+              "latimes/la091190",
+              "latimes/la121889",
+              "latimes/la010189"]
 
 exe = Executable()
 
@@ -20,7 +25,9 @@ algorithm = DEFAULT_ALGORITHM
 number_of_results = DEFAULT_NUMBER_OF_RESULTS
 
 if exe.inv_file is None:
-    exe.indexing([file_path])
+    exe.indexing(file_paths)
+
+print(SC.last_indexing())
 
 try:
     in_res = int(input("Number of results desired ? ").strip())

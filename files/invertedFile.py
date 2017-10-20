@@ -8,6 +8,7 @@ from sortedcontainers import SortedDict
 
 from files import PostingList, FileToPostingLists
 from algorithm import VariableByte
+from stats import StatsControl as SC
 
 '''
 InvertedFile class
@@ -149,6 +150,8 @@ class InvertedFile:
 
             self.vocabulary_of_term[min_term] = (offset, pl_size, idf)
             offset += pl_size
+
+        SC.last_indexing().add_pl_size(offset)
 
         for file in tmp_files:
             file.close()

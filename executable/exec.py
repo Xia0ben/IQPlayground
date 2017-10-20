@@ -1,5 +1,7 @@
 import os.path
 import pickle
+from datetime import datetime
+
 
 from sortedcontainers import SortedDict
 
@@ -71,6 +73,8 @@ class Exec:
                  memory_limit=50,
                  use_vbytes=True):
 
+        SC.new_indexing()
+
         documents = []
 
         self.current_status = "Indexing - Starting"
@@ -104,6 +108,9 @@ class Exec:
             pickle.dump(self.__id_to_filename, file)
 
         self.current_status = "Indexing - Finished - You can query"
+
+        SC.last_indexing().stop()
+
 
     def query(self, query="", algorithm="NAIVE", number_of_results=5):
         SC.new_query(query)
