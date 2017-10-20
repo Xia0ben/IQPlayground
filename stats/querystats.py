@@ -49,7 +49,7 @@ Query configuration:
            number_of_results,
            received_results,
            self.__str__())
-        with open("indexing.logs", "a") as file:
+        with open("querying.logs", "a") as file:
             file.write(log_str)
 
     def __str__(self):
