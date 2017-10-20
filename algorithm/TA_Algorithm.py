@@ -51,6 +51,8 @@ class TA_Algorithm(BaseAlgorithm):
                         del C[kk]
                         C[doc_id] = temp[doc_id][0]
                         U_min = min(C)
+                    else :
+                        break
 
         T = [[k, v] for k, v in C.items()]
         return sorted(T)

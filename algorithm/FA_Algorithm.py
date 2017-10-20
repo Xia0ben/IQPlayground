@@ -40,14 +40,14 @@ class FA_Algorithm(BaseAlgorithm):
                     C.append((doc_id, (M[doc_id][0]+score)/M[doc_id][1]+1))
                     M.__delitem__(doc_id)
                     if len(C) == number_of_results:
-                        return C
+                        return sorted(C)
 
             else:
                 M[doc_id] = [score, 1]
                 if nbre_terms == 1:
                     if len(M) == number_of_results:
                         C = [[k, v[0]] for k, v in M.items()]
-                        return C
+                        return sorted(C)
 
 
         return C
