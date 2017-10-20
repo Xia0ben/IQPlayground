@@ -92,7 +92,10 @@ class Document:
         '''
         :return: a set of the tokens in the document
         '''
-        return set(self.__tokens_neutral).update(self.__tokens_title).update(self.__tokens_date)
+        res = set(self.__tokens_neutral)
+        res.update(self.__tokens_title)
+        res.update(self.__tokens_date)
+        return res
 
     def doc_id(self):
         '''
@@ -110,4 +113,4 @@ class Document:
         '''
         return (self.__counter_neutral[term]
                 + self.__counter_title[term] * self.__title_weight
-                + self.__tokens_date * self.__date_weight)
+                + self.__counter_date[term] * self.__date_weight)
