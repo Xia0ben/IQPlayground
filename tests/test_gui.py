@@ -14,13 +14,19 @@ class Handler:
         "has_stemming": False,
         "has_stop_words_removal": False,
         "has_compression": False,
-        "files_list": []
+        "files_list": [],
+        "ignore_case": False,
+        "date_weight": 1,
+        "title_weight": 1,
+        "use_weights": False,
+        "memory_limit": 50
     }
 
     query_parameters = {
         "algorithm": "NAIVE",
         "results_number": 5,
-        "query": ""
+        "query": "",
+        "similar_words_number": 5
     }
 
     state = {
@@ -62,10 +68,6 @@ class Handler:
                     documentViews.append(documentView)
                     document_string = ""
 
-        #TODO here get the right document by ID
-
-        #return document
-
     def toggle_stemming(self, button):
         print("Toggle stemming to " + str(button.get_active()))
         self.indexation_parameters["has_stemming"] = button.get_active()
@@ -74,9 +76,35 @@ class Handler:
         print("Toggle stop words removal to " + str(button.get_active()))
         self.indexation_parameters["has_stop_words_removal"] = button.get_active()
 
+    def toggle_ignore_case(self, button):
+        print("Toggle ignore case to " + str(button.get_active()))
+        self.indexation_parameters["ignore_case"] = button.get_active()
+
     def toggle_compression(self, button):
         print("Toggle compression to " + str(button.get_active()))
         self.indexation_parameters["has_compression"] = button.get_active()
+
+    def memory_limit_changed(self, spinbutton):
+        print("Memory Limit changed to " + str(spinbutton.get_value_as_int()))
+        self.indexation_parameters["memory_limit"] = spinbutton.get_value_as_int()
+
+    def toggle_weights_use(self, button):
+        print("Toggle weights use to " + str(button.get_active()))
+        self.indexation_parameters["use_weights"] = button.get_active()
+
+        title_weight_grid = builder.get_object("title_weight_grid")
+        title_weight_grid.set_visible(button.get_active())
+
+        date_weight_grid = builder.get_object("date_weight_grid")
+        date_weight_grid.set_visible(button.get_active())
+
+    def title_weight_changed(self, spinbutton):
+        print("Title weight changed to " + str(spinbutton.get_value_as_int()))
+        self.indexation_parameters["title_weight"] = spinbutton.get_value_as_int()
+
+    def date_weight_changed(self, spinbutton):
+        print("Date weight changed to " + str(spinbutton.get_value_as_int()))
+        self.indexation_parameters["date_weight"] = spinbutton.get_value_as_int()
 
     def open_file_chooser(self, button):
         print("Open file chooser")
@@ -109,13 +137,13 @@ class Handler:
         self.backend.indexing(files=self.indexation_parameters["files_list"],
                               ignore_stop_words=self.indexation_parameters["has_stop_words_removal"],
                               stemming=self.indexation_parameters["has_stemming"],
-                              use_vbytes=self.indexation_parameters["has_compression"]
-                              #ignore_case=self.indexation_parameters[""],
-                              #date_weight=
-                              #title_weight=
-                              #use_weights=
-                              #memory_limit=
-                                )
+                              use_vbytes=self.indexation_parameters["has_compression"],
+                              ignore_case=self.indexation_parameters["ignore_case"],
+                              date_weight=self.indexation_parameters["date_weight"],
+                              title_weight=self.indexation_parameters["title_weight"],
+                              use_weights=self.indexation_parameters["use_weights"],
+                              memory_limit=self.indexation_parameters["memory_limit"]
+                            )
         GLib.idle_add(self.on_indexation_complete)
 
     def start_indexation(self, button):
@@ -133,6 +161,8 @@ class Handler:
         indexation_statistics_box = builder.get_object("indexation_statistics_box")
         query_box = builder.get_object("query_box")
         results_box = builder.get_object("results_box")
+        similar_words_box = builder.get_object("similar_words_box")
+        similar_words_box.set_visible(False)
         indexation_statistics_box.set_visible(False)
         query_box.set_visible(False)
         results_box.set_visible(False)
@@ -206,9 +236,29 @@ class Handler:
         print("Results number changed to " + str(spinbutton.get_value_as_int()))
         self.query_parameters["results_number"] = spinbutton.get_value_as_int()
 
+    def similar_words_number_changed(self, spinbutton):
+        print("Similar words number changed to " + str(spinbutton.get_value_as_int()))
+        self.query_parameters["similar_words_number"] = spinbutton.get_value_as_int()
+
     def search_changed(self, searchentry):
-        print("Search changed to " + searchentry.get_text())
-        self.query_parameters["query"] = searchentry.get_text()
+        query = searchentry.get_text()
+        print("Search changed to " + query)
+        self.query_parameters["query"] = query
+
+        start_query_button = builder.get_object("start_query_button")
+        display_similar_words_button = builder.get_object("display_similar_words_button")
+
+        if query == "":
+            start_query_button.set_sensitive(False)
+            display_similar_words_button.set_sensitive(False)
+        elif len(query.split()) == 1:
+            start_query_button.set_sensitive(True)
+            display_similar_words_button.set_sensitive(True)
+        else:
+            start_query_button.set_sensitive(True)
+            display_similar_words_button.set_sensitive(False)
+
+
 
     def call_backend_query(self):
         print("Query started !")
@@ -274,6 +324,48 @@ class Handler:
 
         start_query_button = builder.get_object("start_query_button")
         start_query_button.set_sensitive(True)
+
+    def call_backend_similar_search(self):
+        print("Similar search started !")
+
+        results = self.backend.random_indexing(choice_key=self.query_parameters["query"],
+                                               top_results=self.query_parameters["similar_words_number"])
+        GLib.idle_add(self.on_similar_search_complete, results)
+
+    def start_similar_search(self, button):
+        print("Start query")
+
+        query = self.query_parameters["query"]
+
+        # Just in case, check if the query is only a single word, otherwise random indexing querying doesn't work
+        if len(query.split()) > 1 or query == "":
+            print("Can only find similar words to a single word !")
+            return
+
+        button.set_sensitive(False)
+
+        similar_words_box = builder.get_object("similar_words_box")
+        similar_words_box.set_visible(False)
+
+        thread = threading.Thread(target=self.call_backend_similar_search)
+        thread.daemon = True
+        thread.start()
+
+    def on_similar_search_complete(self, results):
+        print("Query complete !")
+
+        display_similar_words_button = builder.get_object("display_similar_words_button")
+        display_similar_words_button.set_sensitive(True)
+
+        results_text = str(results)
+
+        similar_words_textview = builder.get_object("similar_words_textview")
+        similar_words_textview_buffer = similar_words_textview.get_buffer()
+        similar_words_textview_buffer.set_text(results_text)
+
+        similar_words_box = builder.get_object("similar_words_box")
+        similar_words_box.set_visible(True)
+
 
 builder = Gtk.Builder()
 builder.add_from_file("../ui/main_ui.glade")
