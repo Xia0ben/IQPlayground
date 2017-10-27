@@ -32,11 +32,17 @@ class VectorsSimilarity:
     def cosine_distance(x, y):
         return 1 - VectorsSimilarity.cosine_similarity(x, y)
 
+    '''
+     params :
+        x           : The context vector of a term
+        matrix_dict : A dictionary of terms in key with context vectors in values
+     result:
+        distances   : A dict of distances between the chosen term and the others terms
+    '''
+
     @staticmethod
     def cosine_distances(x, matrix_dict):
-        distances = list()
-        for v in matrix_dict.values():
-            distances.append(VectorsSimilarity.cosine_distance(x, v))
+        distances = dict()
+        for k in matrix_dict.keys():
+            distances[k] = VectorsSimilarity.cosine_distance(x, matrix_dict[k])
         return distances
-
-

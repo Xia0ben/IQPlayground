@@ -1,5 +1,14 @@
 from struct import pack, unpack
 
+'''
+
+VariableByte: class for encoding and decoding a list of numbers
+encoding_number : encoding base function to encode a number to byte format
+encoding        : encoding a list of bytes to a single byte format
+decoding        : decode a byte format to a list of numbers  
+
+'''
+
 
 class VariableByte:
 
