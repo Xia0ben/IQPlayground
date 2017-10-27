@@ -34,9 +34,7 @@ class VectorsSimilarity:
 
     @staticmethod
     def cosine_distances(x, matrix_dict):
-        distances = list()
-        for v in matrix_dict.values():
-            distances.append(VectorsSimilarity.cosine_distance(x, v))
+        distances = dict()
+        for k in matrix_dict.keys():
+            distances[k] = VectorsSimilarity.cosine_distance(x, matrix_dict[k])
         return distances
-
-
