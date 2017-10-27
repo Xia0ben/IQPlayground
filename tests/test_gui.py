@@ -105,8 +105,25 @@ class Handler:
 
         dialog.destroy()
 
+    def call_backend_indexation(self):
+        print("Indexation started !")
+        self.backend.indexing(files=self.indexation_parameters["files_list"],
+                              ignore_stop_words=self.indexation_parameters["has_stop_words_removal"],
+                              stemming=self.indexation_parameters["has_stemming"],
+                              use_vbytes=self.indexation_parameters["has_compression"]
+                              #ignore_case=self.indexation_parameters[""],
+                              #date_weight=
+                              #title_weight=
+                              #use_weights=
+                              #memory_limit=
+                                )
+
+        self.on_indexation_complete()
+
     def start_indexation(self, button):
         print("Start indexation")
+
+        button.set_sensitive(False)
 
         if len(self.indexation_parameters["files_list"]) <= 0:
             print("No file has been specified !")
@@ -122,16 +139,14 @@ class Handler:
         query_box.set_visible(False)
         results_box.set_visible(False)
 
-        self.backend.indexing(files=self.indexation_parameters["files_list"],
-                              ignore_stop_words=self.indexation_parameters["has_stop_words_removal"],
-                              stemming=self.indexation_parameters["has_stemming"],
-                              use_vbytes=self.indexation_parameters["has_compression"]
-                              #ignore_case=self.indexation_parameters[""],
-                              #date_weight=
-                              #title_weight=
-                              #use_weights=
-                              #memory_limit=
-                                )
+        thread = threading.Thread(target=self.call_backend_indexation)
+        thread.daemon = True
+        thread.start()
+
+
+    def on_indexation_complete(self):
+        print("Indexation complete !")
+
         # # Reset this state variable
         # self.state["indexation_done"] = False
         #
@@ -158,9 +173,12 @@ class Handler:
         entry = builder.get_object("search_entry")
         entry.set_completion(completion)
 
-        loading_box.set_visible(False)
+        loading_box = builder.get_object("loading_box")
+        indexation_statistics_box = builder.get_object("indexation_statistics_box")
+        query_box = builder.get_object("query_box")
+        start_indexation_button = builder.get_object("start_indexation_button")
 
-        # TODO Fill indexation statistics here
+        loading_box.set_visible(False)
 
         indexation_stats = StatsControl.last_indexing()
 
@@ -180,6 +198,8 @@ class Handler:
 
         query_box.set_visible(True)
 
+        start_indexation_button.set_sensitive(True)
+
     def algo_combo_changed(self, combobox):
         print("Algo combo changed to " + combobox.get_active_text())
         self.query_parameters["algorithm"] = combobox.get_active_text()
@@ -192,6 +212,14 @@ class Handler:
         print("Search changed to " + searchentry.get_text())
         self.query_parameters["query"] = searchentry.get_text()
 
+    def call_backend_query(self):
+        print("Query started !")
+
+        results = self.backend.query(query=self.query_parameters["query"],
+                                     algorithm=self.query_parameters["algorithm"],
+                                     number_of_results=self.query_parameters["results_number"])
+        self.on_query_complete(results)
+
     def start_query(self, button):
         print("Start query")
 
@@ -199,17 +227,23 @@ class Handler:
             print("No query has been specified !")
             return
 
+        button.set_sensitive(False)
+
         loading_box = builder.get_object("loading_box")
         loading_box.set_visible(True)
 
         print("Dict : {}".format(self.query_parameters))
 
-        results = self.backend.query(query=self.query_parameters["query"],
-                           algorithm=self.query_parameters["algorithm"],
-                           number_of_results=self.query_parameters["results_number"])
+        thread = threading.Thread(target=self.call_backend_query)
+        thread.daemon = True
+        thread.start()
+
+    def on_query_complete(self, results):
+        print("Query complete !")
 
         query_stats = StatsControl.last_query()
 
+        loading_box = builder.get_object("loading_box")
         loading_box.set_visible(False)
 
         start_time_tofill = builder.get_object("start_time_tofill")
@@ -240,14 +274,8 @@ class Handler:
         results_box = builder.get_object("results_box")
         results_box.set_visible(True)
 
-        # DOCID [0]
-        # Score [1]
-        # Path [2]
-        #documents = []
-        #for result in results:
-            #document
-
-        # TODO Create query thread and call function within
+        start_query_button = builder.get_object("start_query_button")
+        start_query_button.set_sensitive(True)
 
 builder = Gtk.Builder()
 builder.add_from_file("../ui/main_ui.glade")
@@ -255,5 +283,5 @@ builder.connect_signals(Handler())
 
 main_window = builder.get_object("main_window")
 main_window.show()
-
+main_window.connect("delete-event", Gtk.main_quit)
 Gtk.main()
