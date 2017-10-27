@@ -111,3 +111,7 @@ ENV/
 
 # Ignore pickle saves
 /pickles
+/invertedfiles
+
+indexing.logs
+querying.logs
