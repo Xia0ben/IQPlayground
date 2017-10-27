@@ -72,6 +72,19 @@ class Exec:
                  date_weight=2,
                  memory_limit=50,
                  use_vbytes=True):
+        """
+        Launch the indexing of a list of files
+        :param files: the paths to the files to index
+        :param ignore_case: should case be ignored in the indexing ?
+        :param ignore_stop_words: should stop words be ignored ?
+        :param stemming: should we stemm the tokens ?
+        :param use_weights: shoud we differenciate word with their position in the document ?
+        :param title_weight: weight for words in title
+        :param date_weight: weight for words in the date
+        :param memory_limit: limit on the memory before a flush in a temp file
+        :param use_vbytes: usage of variable bytes for the final posting list ?
+        :return: when the indexing is finished
+        """
 
         SC.new_indexing()
 
@@ -81,6 +94,8 @@ class Exec:
 
         self.__id_to_filename = SortedDict()
 
+        self.inv_file = InvertedFile(use_vbytes,
+                                     memory_limit)
         for file in files:
             self.current_status = "Indexing - {}".format(file)
             file_docs = Reader.read_file(file,
@@ -92,13 +107,12 @@ class Exec:
                                          date_weight)
             for doc in file_docs:
                 self.__id_to_filename[int(doc.doc_id())] = file
-            documents.extend(file_docs)
+                self.inv_file.add_document(doc)
+
 
         self.current_status = "Indexing - Making the inverted file"
 
-        self.inv_file = InvertedFile(documents,
-                                     use_vbytes,
-                                     memory_limit)
+        self.inv_file.gen_pl_file()
 
         self.current_status = "Indexing - Saving to pickle file"
 
@@ -122,7 +136,17 @@ class Exec:
                  use_vbytes)
 
 
-    def query(self, query="", algorithm="NAIVE", number_of_results=5):
+    def query(self,
+              query="",
+              algorithm="NAIVE",
+              number_of_results=5):
+        """
+        Query the inverted file for documents
+        :param query: the query
+        :param algorithm: the name fo the algorithm to use (a key in ALGORITHM)
+        :param number_of_results: the number of results expected
+        :return: an array of array containing [doc_id, score, path to the file containing the documents]
+        """
         SC.new_query(query)
 
         self.current_status = "Querying - Using {} alogrithm".format(algorithm)

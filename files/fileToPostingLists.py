@@ -21,8 +21,16 @@ class FileToPostingLists:
         self.__use_vbytes = use_vbytes
 
     def gen_posting_list(self, offset, size, idf):
+        """
+        Generate a memory based posting list from a file
+        :param offset: start of the posting list in the file
+        :param size: size of the posting list
+        :param idf: idf of the token
+        :return: a memory based posting list with it size
+        """
         posting_list = PostingList()
         pl_size = 0
+
         with open(self.__pl_file, "rb") as file:
             SC.last_query().add_mem_access()
             file.seek(offset)

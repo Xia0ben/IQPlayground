@@ -38,6 +38,10 @@ class PostingList:
         self.rand_elems[document_id] = score
 
     def alpha_access(self):
+        """
+        access documents by alphabetical order
+        :return: tuple (doc_id, score)
+        """
         for (key, val) in self.rand_elems.items():
             if SC.last_query() is not None:
                 SC.last_query().add_pl_access()

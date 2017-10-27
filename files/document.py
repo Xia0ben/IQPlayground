@@ -25,13 +25,20 @@ class Document:
                  use_weights=True,
                  title_weight=5,
                  date_weight=2):
-        '''
+        """
         Init of the document
         :param xml_text: xml text representing the document
         :param ignore_case: should we convert the xml to lower case ?
-        '''
+        :param ignore_stop_words: shoul we ignore stop words ?
+        :param stemming: should we stemm ?
+        :param use_weights: should we use weights ?
+        :param title_weight: weight for title
+        :param date_weight: weight for date
+        """
+
         self.__title_weight = 1
         self.__date_weight = 1
+
         if use_weights:
             text = xml_text
             self.__title_weight = title_weight
@@ -45,7 +52,10 @@ class Document:
         self.__tokens_title = []
         self.__tokens_date = []
         self.__tokens_neutral = []
+
         type_t = ""
+
+        # Tokenization
         for token in text.split():
             if token.lower() == "<title>":
                 type_t = "title"
@@ -108,8 +118,7 @@ class Document:
 
     def term_frequecy(self, term):
         '''
-        return the term-frequency of a term
-        slide 8 : tf(t,d) = 1 + log(nt,d) or 0 if nt,d = 0
+        return the frequency of a term in the document
         :param term: the term for wich we seek the frequency
         :return: the term-frequency of the term
         '''
