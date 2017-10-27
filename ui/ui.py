@@ -10,6 +10,9 @@ import xml.etree.cElementTree as et
 
 class Handler:
 
+    def __init__(self, builder):
+        self.builder = builder
+
     indexation_parameters = {
         "has_stemming": False,
         "has_stop_words_removal": False,
@@ -27,11 +30,6 @@ class Handler:
         "results_number": 5,
         "query": "",
         "similar_words_number": 5
-    }
-
-    state = {
-        "indexation_done": False,
-        "query_complete": False
     }
 
     backend = Executable()
@@ -92,10 +90,10 @@ class Handler:
         print("Toggle weights use to " + str(button.get_active()))
         self.indexation_parameters["use_weights"] = button.get_active()
 
-        title_weight_grid = builder.get_object("title_weight_grid")
+        title_weight_grid = self.builder.get_object("title_weight_grid")
         title_weight_grid.set_visible(button.get_active())
 
-        date_weight_grid = builder.get_object("date_weight_grid")
+        date_weight_grid = self.builder.get_object("date_weight_grid")
         date_weight_grid.set_visible(button.get_active())
 
     def title_weight_changed(self, spinbutton):
@@ -108,7 +106,7 @@ class Handler:
 
     def open_file_chooser(self, button):
         print("Open file chooser")
-        main_window = builder.get_object("main_window")
+        main_window = self.builder.get_object("main_window")
         dialog = Gtk.FileChooserDialog("Please choose a folder", main_window,
             Gtk.FileChooserAction.SELECT_FOLDER,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
@@ -120,7 +118,7 @@ class Handler:
             folder_path = dialog.get_filename()
             print("Select clicked")
             print("Folder selected: " + folder_path)
-            choose_folder_label = builder.get_object("choose_folder_label")
+            choose_folder_label = self.builder.get_object("choose_folder_label")
             choose_folder_label.set_text(folder_path);
 
             # Get all files in that folder
@@ -155,13 +153,13 @@ class Handler:
 
         button.set_sensitive(False)
 
-        loading_box = builder.get_object("loading_box")
+        loading_box = self.builder.get_object("loading_box")
         loading_box.set_visible(True)
 
-        indexation_statistics_box = builder.get_object("indexation_statistics_box")
-        query_box = builder.get_object("query_box")
-        results_box = builder.get_object("results_box")
-        similar_words_box = builder.get_object("similar_words_box")
+        indexation_statistics_box = self.builder.get_object("indexation_statistics_box")
+        query_box = self.builder.get_object("query_box")
+        results_box = self.builder.get_object("results_box")
+        similar_words_box = self.builder.get_object("similar_words_box")
         similar_words_box.set_visible(False)
         indexation_statistics_box.set_visible(False)
         query_box.set_visible(False)
@@ -175,17 +173,6 @@ class Handler:
     def on_indexation_complete(self):
         print("Indexation complete !")
 
-        # # Reset this state variable
-        # self.state["indexation_done"] = False
-        #
-        # loading_box = builder.get_object("loading_box")
-        # loading_box.set_visible(True)
-        #
-        # # As long as the indexation is being executed stay true, and then :
-        # loading_box.set_visible(False)
-        # query_box = builder.get_object("query_box")
-        # query_box.set_visible(True)
-
         # When indexation is finished Change this to get vocabulary from inverted file
         # Eventualy manage exception if vocabular inexistent
         vocabulary = self.backend.inv_file.get_terms()
@@ -198,28 +185,28 @@ class Handler:
         completion.set_model(liststore)
         completion.set_text_column(0)
 
-        entry = builder.get_object("search_entry")
+        entry = self.builder.get_object("search_entry")
         entry.set_completion(completion)
 
-        loading_box = builder.get_object("loading_box")
-        indexation_statistics_box = builder.get_object("indexation_statistics_box")
-        query_box = builder.get_object("query_box")
-        start_indexation_button = builder.get_object("start_indexation_button")
+        loading_box = self.builder.get_object("loading_box")
+        indexation_statistics_box = self.builder.get_object("indexation_statistics_box")
+        query_box = self.builder.get_object("query_box")
+        start_indexation_button = self.builder.get_object("start_indexation_button")
 
         loading_box.set_visible(False)
 
         indexation_stats = StatsControl.last_indexing()
 
-        indexation_start_time_tofill = builder.get_object("indexation_start_time_tofill")
+        indexation_start_time_tofill = self.builder.get_object("indexation_start_time_tofill")
         indexation_start_time_tofill.set_text("{:%H:%M:%S.%f}".format(indexation_stats.start_time))
 
-        indexation_end_time_tofill = builder.get_object("indexation_end_time_tofill")
+        indexation_end_time_tofill = self.builder.get_object("indexation_end_time_tofill")
         indexation_end_time_tofill.set_text("{:%H:%M:%S.%f}".format(indexation_stats.finish_time))
 
-        indexation_total_time_tofill = builder.get_object("indexation_total_time_tofill")
+        indexation_total_time_tofill = self.builder.get_object("indexation_total_time_tofill")
         indexation_total_time_tofill.set_text("{}".format(indexation_stats.total_time))
 
-        indexation_file_size_tofill = builder.get_object("indexation_file_size_tofill")
+        indexation_file_size_tofill = self.builder.get_object("indexation_file_size_tofill")
         indexation_file_size_tofill.set_text(str(indexation_stats.file_size))
 
         indexation_statistics_box.set_visible(True)
@@ -245,8 +232,8 @@ class Handler:
         print("Search changed to " + query)
         self.query_parameters["query"] = query
 
-        start_query_button = builder.get_object("start_query_button")
-        display_similar_words_button = builder.get_object("display_similar_words_button")
+        start_query_button = self.builder.get_object("start_query_button")
+        display_similar_words_button = self.builder.get_object("display_similar_words_button")
 
         if query == "":
             start_query_button.set_sensitive(False)
@@ -277,7 +264,7 @@ class Handler:
 
         button.set_sensitive(False)
 
-        loading_box = builder.get_object("loading_box")
+        loading_box = self.builder.get_object("loading_box")
         loading_box.set_visible(True)
 
         print("Dict : {}".format(self.query_parameters))
@@ -291,22 +278,22 @@ class Handler:
 
         query_stats = StatsControl.last_query()
 
-        loading_box = builder.get_object("loading_box")
+        loading_box = self.builder.get_object("loading_box")
         loading_box.set_visible(False)
 
-        start_time_tofill = builder.get_object("start_time_tofill")
+        start_time_tofill = self.builder.get_object("start_time_tofill")
         start_time_tofill.set_text("{:%H:%M:%S.%f}".format(query_stats.start_time))
 
-        end_time_tofill = builder.get_object("end_time_tofill")
+        end_time_tofill = self.builder.get_object("end_time_tofill")
         end_time_tofill.set_text("{:%H:%M:%S.%f}".format(query_stats.finish_time))
 
-        total_time_tofill = builder.get_object("total_time_tofill")
+        total_time_tofill = self.builder.get_object("total_time_tofill")
         total_time_tofill.set_text("{}".format(query_stats.total_time))
 
-        pl_accesses_tofill = builder.get_object("pl_accesses_tofill")
+        pl_accesses_tofill = self.builder.get_object("pl_accesses_tofill")
         pl_accesses_tofill.set_text(str(query_stats.pl_accesses))
 
-        disk_accesses_tofill = builder.get_object("disk_accesses_tofill")
+        disk_accesses_tofill = self.builder.get_object("disk_accesses_tofill")
         disk_accesses_tofill.set_text(str(query_stats.memory_accesses))
 
         results_text = "\t Score     |\tDOCID   |\t   File path \n"
@@ -315,14 +302,14 @@ class Handler:
 
         print("results" + results_text)
 
-        results_textview = builder.get_object("results_textview")
+        results_textview = self.builder.get_object("results_textview")
         results_textview_buffer = results_textview.get_buffer()
         results_textview_buffer.set_text(results_text)
 
-        results_box = builder.get_object("results_box")
+        results_box = self.builder.get_object("results_box")
         results_box.set_visible(True)
 
-        start_query_button = builder.get_object("start_query_button")
+        start_query_button = self.builder.get_object("start_query_button")
         start_query_button.set_sensitive(True)
 
     def call_backend_similar_search(self):
@@ -344,7 +331,7 @@ class Handler:
 
         button.set_sensitive(False)
 
-        similar_words_box = builder.get_object("similar_words_box")
+        similar_words_box = self.builder.get_object("similar_words_box")
         similar_words_box.set_visible(False)
 
         thread = threading.Thread(target=self.call_backend_similar_search)
@@ -354,24 +341,14 @@ class Handler:
     def on_similar_search_complete(self, results):
         print("Query complete !")
 
-        display_similar_words_button = builder.get_object("display_similar_words_button")
+        display_similar_words_button = self.builder.get_object("display_similar_words_button")
         display_similar_words_button.set_sensitive(True)
 
         results_text = str(results)
 
-        similar_words_textview = builder.get_object("similar_words_textview")
+        similar_words_textview = self.builder.get_object("similar_words_textview")
         similar_words_textview_buffer = similar_words_textview.get_buffer()
         similar_words_textview_buffer.set_text(results_text)
 
-        similar_words_box = builder.get_object("similar_words_box")
+        similar_words_box = self.builder.get_object("similar_words_box")
         similar_words_box.set_visible(True)
-
-
-builder = Gtk.Builder()
-builder.add_from_file("../ui/main_ui.glade")
-builder.connect_signals(Handler())
-
-main_window = builder.get_object("main_window")
-main_window.show()
-main_window.connect("delete-event", Gtk.main_quit)
-Gtk.main()
