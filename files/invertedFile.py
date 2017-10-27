@@ -94,7 +94,7 @@ class InvertedFile:
 
         del self.tmp_voc
 
-        self.tmp_files_path.append(tmp_path)
+        self.tmp_files_path.append(self.tmp_path)
 
         tmp_files = []
         tmp_used = []
