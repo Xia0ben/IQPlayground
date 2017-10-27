@@ -74,4 +74,3 @@ class VariableByte:
                 numbers.append(number)
                 number = 0
         return numbers
-
