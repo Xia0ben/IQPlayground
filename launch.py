@@ -26,7 +26,7 @@ def get_filelist_from_folderpath(folderpath):
 
     return filelist
 
-file_paths = get_filelist_from_folderpath("latimes")
+file_paths = get_filelist_from_folderpath("latests")
 
 exe = Executable()
 
