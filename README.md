@@ -2,6 +2,8 @@
 
 Text Indexation &amp; Query Algorithms Playground
 
+![Demo](https://github.com/xia0ben/iqplayground/blob/master/app-overview/iqplayground_test.gif)
+
 ## Aim
 
 This project offers a graphical playground for discovering Text Indexation &amp; Query Algorithms, and playing around with the many parameters to see how it may influence performance in terms of speed and memory consumption.
