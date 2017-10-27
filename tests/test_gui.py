@@ -3,7 +3,6 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import GLib, Gtk, GObject
 from os import walk
 import threading
-import time
 from executable import Executable
 from stats import StatsControl
 
