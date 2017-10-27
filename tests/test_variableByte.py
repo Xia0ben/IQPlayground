@@ -1,4 +1,4 @@
-from algorithm import VariableByte
+from files import VariableByte
 from unittest import TestCase
 
 
