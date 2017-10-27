@@ -202,6 +202,9 @@ class Exec:
             del titles[0]
             del values[0]
 
+            print(titles)
+            print(values)
+
             titles_top = titles[:top_results]
             values_top = values[:top_results]
 
