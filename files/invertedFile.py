@@ -37,7 +37,6 @@ class InvertedFile:
                 tmp_file.write("{}\t{}\t{}\n".format(term, size, pl_str))
 
     def __init__(self,
-                 documents,
                  use_vbytes=True,
                  memory_limit= 50):
         '''
@@ -48,6 +47,8 @@ class InvertedFile:
         an inverted file is a mapping between a vocabulary of terms and posting lists
         :param documents: a list of documents
         '''
+        self.use_vbytes = use_vbytes
+        self.memory_limit = memory_limit
 
         self.doc_id_vectors_list = dict()  # HERE
 
@@ -55,44 +56,49 @@ class InvertedFile:
 
         self.__postinglist_file_path = "invertedfiles/{:%H%M%S}.plf".format(self.__time_start)
 
-        __nb_tmp_inverted_file = 0
+        self.__nb_tmp_inverted_file = 0
 
-        tmp_inverted_file_base_path = "invertedfiles/tmp-{:%H%M%S}-".format(self.__time_start)
+        self.tmp_inverted_file_base_path = "invertedfiles/tmp-{:%H%M%S}-".format(self.__time_start)
 
-        doc_count = 0
-        tmp_voc = SortedDict()
-        tmp_path = "{}{}".format(tmp_inverted_file_base_path,
-                                 __nb_tmp_inverted_file)
-        tmp_files_path = []
+        self.doc_count = 0
+        self.tmp_voc = SortedDict()
+        self.tmp_path = "{}{}".format(self.tmp_inverted_file_base_path,
+                                      self.__nb_tmp_inverted_file)
+        self.tmp_files_path = []
 
-        for document in documents:
-            self.doc_id_vectors_list[document.doc_id()] = RandomIndex.get_random_index_vector() #HERE
-            # print(self.doc_id_vectors_list[document.doc_id()])   #HERE
-            for term in document.set_of_terms():
-                if term not in tmp_voc:
-                    tmp_voc[term] = [0, PostingList()]
-                tmp_voc[term][0] += 1
-                id = document.doc_id()
-                freq = document.term_frequecy(term)
-                tmp_voc[term][1].add_document(id, freq)
 
-            doc_count += 1
+    def add_document(self, document):
+        self.doc_id_vectors_list[document.doc_id()] = RandomIndex.get_random_index_vector() #HERE
+        # print(self.doc_id_vectors_list[document.doc_id()])   #HERE
+        for term in document.set_of_terms():
+            if term not in self.tmp_voc:
+                self.tmp_voc[term] = [0, PostingList()]
+            self.tmp_voc[term][0] += 1
+            id = document.doc_id()
+            freq = document.term_frequecy(term)
+            self.tmp_voc[term][1].add_document(id, freq)
 
-            if doc_count == memory_limit:
-                doc_count = 0
-                self._dump(tmp_path, tmp_voc)
-                tmp_files_path.append(tmp_path)
-                tmp_voc = SortedDict()
-                __nb_tmp_inverted_file += 1
-                tmp_path = "{}{}".format(tmp_inverted_file_base_path,
-                                         __nb_tmp_inverted_file)
+        self.doc_count += 1
 
-        self._dump(tmp_path, tmp_voc)
-        tmp_files_path.append(tmp_path)
+        if self.doc_count == self.memory_limit:
+            self.doc_count = 0
+            self._dump(self.tmp_path, self.tmp_voc)
+            self.tmp_files_path.append(self.tmp_path)
+            self.tmp_voc = SortedDict()
+            self.__nb_tmp_inverted_file += 1
+            self.tmp_path = "{}{}".format(self.tmp_inverted_file_base_path,
+                                          self.__nb_tmp_inverted_file)
+
+    def gen_pl_file(self):
+        self._dump(self.tmp_path, self.tmp_voc)
+
+        del self.tmp_voc
+
+        self.tmp_files_path.append(self.tmp_path)
 
         tmp_files = []
         tmp_used = []
-        for path in tmp_files_path:
+        for path in self.tmp_files_path:
             tmp_used.append(False)
             tmp_files.append(open(path, "r"))
 
@@ -148,7 +154,7 @@ class InvertedFile:
                             term_rdm_index = list(map(lambda x, y: x + y, term_rdm_index,
                                                       self.doc_id_vectors_list[val]))  # HERE
                         freq += 1
-                        if use_vbytes:
+                        if self.use_vbytes:
                             bytes_val = VariableByte.encoding_number(int(val))
                         else:
                             bytes_val = int(val).to_bytes(4, byteorder='big', signed=False)
@@ -172,7 +178,7 @@ class InvertedFile:
         for file_path in tmp_files_path:
             os.remove(file_path)
 
-        self.__postinglist_gen = FileToPostingLists(self.__postinglist_file_path, use_vbytes)
+        self.__postinglist_gen = FileToPostingLists(self.__postinglist_file_path, self.use_vbytes)
 
         # parallel read
         # combination
