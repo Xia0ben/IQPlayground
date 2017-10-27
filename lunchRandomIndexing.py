@@ -39,22 +39,30 @@ else:
     with open(pickle_path, "wb") as file:
         pickle.dump(inv_file, file)
 
-dict_vectors_terms = inv_file.get_vectors_of_term()
-
-#print(dict_vectors_terms.keys())
-
-my_keys = dict_vectors_terms.keys()
 
 print("Loaded Inverted File - {} terms found".format(len(inv_file.vocabulary_of_term)))
 
-# for term in dict_vectors_terms.keys():
+'''
+Begin executing the random index algorithm
+'''
 
+# Get the terms vectors :
+dict_vectors_terms = inv_file.get_vectors_of_term()
+
+# Get the list of terms :
+my_keys = dict_vectors_terms.keys()
+
+# The list of terms to choose one :
 print(my_keys)
 
+# The chosen term :
 choice_key = input("\nYour word choice ? ")
 
+# Choose the number of top displayed similarity results :
 top_results = int(input("number of similar words in display ? "))
 
+
+# Calculate distance when the term exist in our vocabulary :
 if choice_key in dict_vectors_terms:
 
     choice_key_similarity = VectorsSimilarity.cosine_distances(dict_vectors_terms[choice_key], dict_vectors_terms)
