@@ -46,11 +46,11 @@ pip install sortedcontainers
 ### Execution
 
 - Console mode:
-  - access the project repository in the console  
-	- run "console_mode_launch.py" with the python interpreter in you installed everything.
+	+ access the project repository in the console  
+	+ run "console_mode_launch.py" with the python interpreter in you installed everything.
 
 - Graphical mode:
-  - run "launch.py" with the python interpreter in you installed everything.
+  + run "launch.py" with the python interpreter in you installed everything.
 
 ## Description of the packages
 
@@ -92,14 +92,12 @@ pip install sortedcontainers
   - variableByte : encoding and decoding of variable byte integers
 
 > Explaining Encoding :
-
   + Get the last seven bits from the binary code 1100001001 is 0001001,
   + Add 1 as the "head" bit (0001001 -> 10001001)
   + Because there are still 3 bits left in the original binary code.
     Get the remain 3 bits, this time use 0 as the "head" bit (110 -> 00000110)
   + Because there is no remain in the original binary code
     put these two bytes together 0000011010001001 is the VB code.
-
 
 + RandomIndexing
 
