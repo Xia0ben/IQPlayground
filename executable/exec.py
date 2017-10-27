@@ -202,13 +202,10 @@ class Exec:
             del titles[0]
             del values[0]
 
-            print(titles)
-            print(values)
-
             titles_top = titles[:top_results]
             values_top = values[:top_results]
 
-            final_results = list()
+            final_results = [0] * top_results
 
             for i in range(top_results):
                 final_results[i] = (titles_top[i], values_top[i])
