@@ -65,9 +65,11 @@ class InvertedFile:
         self.tmp_path = "{}{}".format(self.tmp_inverted_file_base_path,
                                       self.__nb_tmp_inverted_file)
         self.tmp_files_path = []
+        self.nb_docs = 0
 
 
     def add_document(self, document):
+        self.nb_docs += 1
         self.doc_id_vectors_list[document.doc_id()] = RandomIndex.get_random_index_vector() #HERE
         # print(self.doc_id_vectors_list[document.doc_id()])   #HERE
         for term in document.set_of_terms():
@@ -166,7 +168,7 @@ class InvertedFile:
             # print(self.vectors_of_term[min_term])   # HERE
             # print()  # HERE
 
-            idf = log10(len(documents) / (1 + (freq/2)))
+            idf = log10(self.nb_docs / (1 + (freq/2)))
 
             self.vocabulary_of_term[min_term] = (offset, pl_size, idf)
             offset += pl_size
@@ -175,7 +177,7 @@ class InvertedFile:
 
         for file in tmp_files:
             file.close()
-        for file_path in tmp_files_path:
+        for file_path in self.tmp_files_path:
             os.remove(file_path)
 
         self.__postinglist_gen = FileToPostingLists(self.__postinglist_file_path, self.use_vbytes)
