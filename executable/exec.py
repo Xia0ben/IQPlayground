@@ -177,6 +177,15 @@ class Exec:
 
         return results
 
+
+    '''
+    random_indexing:
+        params:
+            choice_key  : string which is the term
+            top_results : the number of top results
+        result:
+            a list of tuples, which a tuple contain in first the term, and second the distance
+    '''
     def random_indexing(self, choice_key, top_results):
 
         # Get the terms vectors :
