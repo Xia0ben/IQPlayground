@@ -32,9 +32,9 @@ class FA_Algorithm(BaseAlgorithm):
         C = []
 
         for (doc_id, score) in inverted_file.parallel_scan(searched_terms):
-            if doc_id in M :
+            if doc_id in M:
 
-                M[doc_id] = [(M[doc_id][0] + score ), (M[doc_id][1]+1)]
+                M[doc_id] = [(M[doc_id][0] + score), (M[doc_id][1]+1)]
 
                 if M[doc_id][1] == nbre_terms :
                     C.append((doc_id, (M[doc_id][0]+score)/M[doc_id][1]+1))

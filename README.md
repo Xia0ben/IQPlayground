@@ -185,3 +185,34 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
 + UI
 
     - Contains files used to generate the user interface
+
+##RUNNING THE PROJECT:
+
++ Prerequisites
+    
+   - Python 3.6
+   - Git
+   
++ Installation
+
+   - Import the Project : git pull https://github.com/Xia0ben/IQPlayground.git
+   - Add the files directory "latimes" to the project repository
+   - Add the folder pickles , and invertedfiles to the project repository
+   - install nltk (using python interpreter): >>> import nltk
+                                              >>> nltk.download()
+   - install numpy package with pip : pip install numpy --index-url=http://pypi.python.org/simple/ --trusted-host pypi.python.org
+
+   - install sortedcontainers library with pip: pip install sortedcontainers
+   
++ Execution 
+
+   - Console mode : 
+        
+        - access the project repository in the console  
+        - run the console_mode_launch.py : python console_mode_launch.py
+        
+   - Graphical mode :
+   
+        - import gi , and install  PyGObject, GTK+ and their dependencies : http://pygobject.readthedocs.io/en/latest/getting_started.html
+        - run the python file "test_gui.py" in the directory tests
+        
