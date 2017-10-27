@@ -227,5 +227,5 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
    - Graphical mode :
    
         - import gi , and install  PyGObject, GTK+ and their dependencies : http://pygobject.readthedocs.io/en/latest/getting_started.html
-        - run the python file "test_gui.py" in the directory tests.
+        - run the python file "test_gui.py" in the directory tests .
         
