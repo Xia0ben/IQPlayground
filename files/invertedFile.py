@@ -6,10 +6,9 @@ import os
 import numpy as np
 from sortedcontainers import SortedDict
 
-from files import PostingList, FileToPostingLists
-from algorithm import VariableByte
+from files import PostingList, FileToPostingLists, VariableByte
 from stats import StatsControl as SC
-from algorithm import RandomIndex
+from randomindexing import RandomIndex
 
 '''
 InvertedFile class

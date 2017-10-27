@@ -134,3 +134,54 @@ Simple graphical user interface with search bar(s), some checkboxes to activate 
 ## Presentation 20/10/2017 from 17 to 18 a.m
 
 + BE AWESOME ! :D
+
+## Description of the packages
+
++ Algorithm
+
+    - Contains classes for each algorithm
+    
+    - Each algorithm is derived from the baseAlgorithm class
+    
+    - naiveAlgorithm : a naive query algorithm based on parallel scan of the posting lists
+    
+    - FA_Algorithm : Fagin's top-k query algorithm
+    
+    - TA_Algorithm : Fagin's thershold algorithm
+    
++ Executable
+    
+    - Contains an executable class which act as a controller for the project
+    
++ Files
+
+    - Contains multiple classes which act with the memory and the hard drive
+    
+    - document : a memory based representation of a document
+    
+    - fileToPostingList : read a pl FILE to generate memory based posting lists when needed
+    
+    - invertedFile : memory based inverted file, which do a merge based creation of the posting lists
+    
+    - postingList : a memory based representation of the posting lists with 3 access :
+        + randomaccess : return the score of a doc id in log(n) time
+        + alphaaccess : return the doc_id and score ordered by doc_id
+        + orderedaccess : return the doc_id and score ordered by score
+    
+    - reader : read a file and returns documents
+        
+    - stemmer : implementation of porter's algorithm
+    
+    - variableByte : encoding and decoding of variable byte integers
+    
++ RandomIndexing
+    
+    - Contains classes used for the random indexing of terms
+    
++ Stats
+
+    - Contains classes which allow to get stats ont indexing and querying
+    
++ UI
+
+    - Contains files used to generate the user interface

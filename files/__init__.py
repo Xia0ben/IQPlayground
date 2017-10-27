@@ -1,3 +1,5 @@
+
+from .variableByte import VariableByte
 from .document import Document
 from .stemmer import Stemmer
 from .postingList import PostingList

@@ -1,7 +1,7 @@
 from math import log10
 
-from algorithm import VariableByte
-from files import PostingList
+
+from files import PostingList, VariableByte
 from stats import StatsControl as SC
 
 '''
