@@ -6,10 +6,10 @@ from datetime import datetime
 from sortedcontainers import SortedDict
 
 from files import InvertedFile, Reader
-from algorithm import NaiveAlgorithm, SimpleScanAlgorithm, FA_Algorithm, TA_Algorithm
+from algorithm import NaiveAlgorithm, FA_Algorithm, TA_Algorithm
 from stats import StatsControl as SC
 
-from algorithm import VectorsSimilarity
+from randomindexing import VectorsSimilarity
 
 
 '''
@@ -26,14 +26,12 @@ and algorithms to index and query files
 class Exec:
     ALGORITHMS = {
         "NAIVE": NaiveAlgorithm,
-        "SIMPLE": SimpleScanAlgorithm,
         "FA": FA_Algorithm,
         "TA": TA_Algorithm
     }
 
     ALGORITHMS_DESC = {
         "NAIVE": "A naive Top-K algorithm adding the scores of the documents",
-        "SIMPLE": "A simple algorithm who select the documents where all the queried words appears",
         "FA": "Fagin's top-k query algorithm (FA)",
         "TA": "Fagin’s threshold algorithm (TA)"
     }
