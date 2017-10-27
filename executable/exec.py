@@ -177,12 +177,11 @@ class Exec:
 
         return results
 
-
     '''
     random_indexing:
         params:
-            choice_key  : string which is the term
-            top_results : the number of top results
+            choice_key  : (string) which is the term
+            top_results : (int) the number of top results
         result:
             a list of tuples, which a tuple contain in first the term, and second the distance
     '''
