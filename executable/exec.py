@@ -9,6 +9,9 @@ from files import InvertedFile, Reader
 from algorithm import NaiveAlgorithm, SimpleScanAlgorithm, FA_Algorithm, TA_Algorithm
 from stats import StatsControl as SC
 
+from algorithm import VectorsSimilarity
+
+
 '''
 Executable class
 
@@ -173,3 +176,30 @@ class Exec:
         self.current_status = "Querying - Finished"
 
         return results
+
+    def random_indexing(self, choice_key, top_results):
+
+        # Get the terms vectors :
+        dict_vectors_terms = self.inv_file.get_vectors_of_term()
+
+        # Calculate distance when the term exist in our vocabulary :
+        if choice_key in dict_vectors_terms:
+
+            choice_key_similarity = VectorsSimilarity.cosine_distances(dict_vectors_terms[choice_key],
+                                                                       dict_vectors_terms)
+
+            titles = sorted(choice_key_similarity, key=choice_key_similarity.get)
+            values = sorted(choice_key_similarity.values())
+
+            del titles[0]
+            del values[0]
+
+            titles_top = titles[:top_results]
+            values_top = values[:top_results]
+
+            final_results = list()
+
+            for i in range(top_results):
+                final_results[i] = (titles_top[i], values_top[i])
+
+            return final_results
