@@ -117,17 +117,16 @@ class Handler:
                               #use_weights=
                               #memory_limit=
                                 )
-
-        self.on_indexation_complete()
+        GLib.idle_add(self.on_indexation_complete)
 
     def start_indexation(self, button):
         print("Start indexation")
 
-        button.set_sensitive(False)
-
         if len(self.indexation_parameters["files_list"]) <= 0:
             print("No file has been specified !")
             return
+
+        button.set_sensitive(False)
 
         loading_box = builder.get_object("loading_box")
         loading_box.set_visible(True)
@@ -218,7 +217,7 @@ class Handler:
         results = self.backend.query(query=self.query_parameters["query"],
                                      algorithm=self.query_parameters["algorithm"],
                                      number_of_results=self.query_parameters["results_number"])
-        self.on_query_complete(results)
+        GLib.idle_add(self.on_query_complete, results)
 
     def start_query(self, button):
         print("Start query")
